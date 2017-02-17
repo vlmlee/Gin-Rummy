@@ -20,6 +20,7 @@ func (h *Hand) DiscardCard() Hand {
 // PrettyPrint a player's hand. This is for the view.
 func PrettyPrint(h Hand) string {
 	var result string
+	// First sort Cards then pretty print
 	for i, card := range h.Cards {
 		result += card.symbol + card.suit[:1]
 		if i != len(h.Cards)-1 {
