@@ -27,8 +27,8 @@ func (deck *Deck) Shuffle() Deck {
 }
 
 // Deal cards to player's hands.
-func (deck *Deck) Deal(hand Hand) Deck {
+func (deck *Deck) Deal(hand Hand) {
 	for hand.HandSize < 10 {
-		hand.AddCardToHand(deck)
+		hand.AddCardToHand(*deck)
 	}
 }

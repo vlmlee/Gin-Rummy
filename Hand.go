@@ -7,19 +7,19 @@ type Hand struct {
 	HandSize    int
 }
 
-// AddCardToHand will pop a card from the deck and add it to the player's hand.
-func (h *Hand) AddCardToHand(card []Card) Hand {
-	return
+// PickUpAble describes a type that can add a card to player's hand. These
+// types are Deck and Stack.
+type PickUpAble interface {
+	AddCardToHand()
 }
 
-// DiscardCard will pop a card from the player's hand and add it to the stack.
-func (h *Hand) DiscardCard() Hand {
+// DiscardCardFromHand will pop a card from the player's hand and add it to the // stack.
+func (h *Hand) DiscardCardFromHand() Hand {
 
 }
 
 // PrettyPrint a player's hand. This is for the view.
-func PrettyPrint(h Hand) string {
-	var result string
+func PrettyPrint(h Hand) (result string) {
 	// First sort Cards then pretty print
 	for i, card := range h.Cards {
 		result += card.symbol + card.suit[:1]
@@ -27,7 +27,7 @@ func PrettyPrint(h Hand) string {
 			result += " "
 		}
 	}
-	return result
+	return
 }
 
 // String() allows us to pretty print everytime we pass it to fmt.Print.

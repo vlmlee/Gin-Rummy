@@ -8,3 +8,14 @@ package main
 // is currently not in a meld. If the card on the stack is not within 2 range,
 // it will draw a card from the deck. If it has to decide between two cards
 // with one pairing to discard, it will always discard the greater value card.
+
+// IsNearestNeighbor will check if card on the top of the stack is a nearest
+// neighbor.
+func IsNearestNeighbor() {
+
+}
+
+// ChooseCardToDiscard will decide between cards to discard.
+func ChooseCardToDiscard() {
+
+}
