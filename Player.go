@@ -11,7 +11,7 @@ func (p *Player) DiscardCardFromHand(c Card, s *Stack) (hand Hand) {
 	hand = p.Hand
 	for index, card := range hand {
 		if c == card {
-			s.AddCard(card)
+			s.AddCardToStack(card)
 			hand = append(hand[:index], hand[index+1:]...)
 		}
 	}

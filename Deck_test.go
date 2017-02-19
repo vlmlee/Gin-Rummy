@@ -58,22 +58,26 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 func TestDrawCards(t *testing.T) {
 	deck := InitializeDeck()
 	testHand := &Hand{}
-	deck = deck.DrawCard(testHand)
+	deck, _ = deck.DrawCard(testHand)
+
 	if len(*testHand) == 0 {
 		t.Error("Failed to draw a card.")
 	}
-	deck = deck.DrawCard(testHand)
+
+	deck, _ = deck.DrawCard(testHand)
+
 	if CheckDups(*testHand) {
 		t.Error("There are duplicates in the hand.")
 	}
 	return
 }
 
-func TestDeckDealsTenCardsToPlayer(t *testing.T) {
+func TestDeckDealsTenCardsToPlayers(t *testing.T) {
 	deck := InitializeDeck()
 	p1 := &Player{"Michael", []Card{}}
 	p2 := &Player{"AI", []Card{}}
 	deck.Deal(p1, p2)
+
 	if len(p1.Hand) != 10 {
 		t.Error("Player one did not draw 10 cards!")
 	}

@@ -10,7 +10,7 @@ type PickUpAble interface {
 }
 
 // PrettyPrint a player's hand. This is for the view.
-func PrettyPrint(hand Hand) (result string) {
+func (hand Hand) PrettyPrint() (result string) {
 	// First sort Cards then pretty print
 	for i, card := range hand {
 		result += card.symbol + card.suit[:1]
@@ -22,8 +22,8 @@ func PrettyPrint(hand Hand) (result string) {
 }
 
 // String() allows us to pretty print everytime we pass it to fmt.Print.
-func (h Hand) String() string {
-	return PrettyPrint(h)
+func (hand Hand) String() string {
+	return hand.PrettyPrint()
 }
 
 // CheckTotal checks the total number of points in a player's hand. It must be // less than 10 to knock.
