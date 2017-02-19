@@ -2,7 +2,13 @@ package main
 
 // StartNewGame initalizes the players, the deck, and deals cards to each
 // player.
-func StartNewGame(score int) {
+func StartNewGame() {
+	RummyDeck := InitializeDeck()
+	RummyStack := Stack{}
+}
+
+// Action describes what the player is going to do.
+func Action() {
 
 }
 
@@ -28,9 +34,8 @@ func EndGame() {
 }
 
 func main() {
-	var score int
-	StartNewGame(score)
-
+	// var score int
+	StartNewGame()
 	// Play again?
 	// Tally score + replay with new scores
 	// if ... {

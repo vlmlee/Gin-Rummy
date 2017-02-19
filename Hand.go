@@ -1,29 +1,20 @@
 package main
 
-// Hand is the array of cards a player is holding. Max hand size is ten card.
-type Hand struct {
-	Cards       []Card
-	MaxHandSize int
-	HandSize    int
-}
+// Hand is the array of cards a player is holding. Max hand size will be ten card.
+type Hand []Card
 
 // PickUpAble describes a type that can add a card to player's hand. These
 // types are Deck and Stack.
 type PickUpAble interface {
-	AddCardToHand()
-}
-
-// DiscardCardFromHand will pop a card from the player's hand and add it to the // stack.
-func (h *Hand) DiscardCardFromHand() Hand {
-
+	DrawCard()
 }
 
 // PrettyPrint a player's hand. This is for the view.
-func PrettyPrint(h Hand) (result string) {
+func PrettyPrint(hand Hand) (result string) {
 	// First sort Cards then pretty print
-	for i, card := range h.Cards {
+	for i, card := range hand {
 		result += card.symbol + card.suit[:1]
-		if i != len(h.Cards)-1 {
+		if i != len(hand)-1 {
 			result += " "
 		}
 	}

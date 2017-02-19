@@ -55,18 +55,6 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 	return
 }
 
-// Checks for duplicate objects in an array.
-func CheckDups(arr []Card) bool {
-	dups := map[Card]bool{}
-	for _, card := range arr {
-		if dups[card] == true {
-			return true
-		}
-		dups[card] = true
-	}
-	return false
-}
-
 func TestDrawCards(t *testing.T) {
 	deck := InitializeDeck()
 	testHand := &Hand{}
@@ -96,4 +84,16 @@ func TestDeckDealsTenCardsToPlayer(t *testing.T) {
 		t.Error("There are duplicate cards in the hands!")
 	}
 	return
+}
+
+// Checks for duplicate objects in an array.
+func CheckDups(arr []Card) bool {
+	dups := map[Card]bool{}
+	for _, card := range arr {
+		if dups[card] == true {
+			return true
+		}
+		dups[card] = true
+	}
+	return false
 }
