@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -31,17 +32,21 @@ func (deck *Deck) Deal(p1, p2 *Player) {
 	count := 0
 	for len(p1.Hand) < 10 || len(p2.Hand) < 10 {
 		if count%2 == 0 {
-			*deck = deck.DrawCard(&p1.Hand)
+			*deck, _ = deck.DrawCard(&p1.Hand)
 		} else {
-			*deck = deck.DrawCard(&p2.Hand)
+			*deck, _ = deck.DrawCard(&p2.Hand)
 		}
 		count++
 	}
 }
 
 // DrawCard by popping a card from the Deck and appending it to a player's hand.
-func (deck *Deck) DrawCard(hand *Hand) (d Deck) {
+func (deck *Deck) DrawCard(hand *Hand) (d Deck, err error) {
 	d = *deck
+	if len(*hand) >= 11 {
+		err = fmt.Errorf("cannot have a hand size more than 11")
+		return
+	}
 	card := d[len(d)-1]
 	d = d[:len(d)-1]
 	*hand = append(*hand, card)
