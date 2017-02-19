@@ -24,10 +24,10 @@ func TestMaxHandSizeIsEqualToEleven(t *testing.T) {
 
 func TestPrettyPrintHand(t *testing.T) {
 	hand := Hand{
-		{1, "Clubs", "A"}, {2, "Diamonds", "2"}, {3, "Spades", "3"},
-		{4, "Hearts", "4"}, {5, "Clubs", "5"}, {6, "Diamonds", "6"},
-		{7, "Hearts", "7"}, {11, "Clubs", "J"}, {12, "Spades", "Q"},
-		{13, "Clubs", "K"},
+		{13, "Clubs", "K"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {6, "Diamonds", "6"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {5, "Clubs", "5"}, {7, "Hearts", "7"},
+		{11, "Clubs", "J"},
 	}
 
 	prettyHand := hand.PrettyPrint()

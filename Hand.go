@@ -1,5 +1,7 @@
 package main
 
+import "sort"
+
 // Hand is the array of cards a player is holding. Max hand size will be ten card.
 type Hand []Card
 
@@ -9,9 +11,21 @@ type PickUpAble interface {
 	DrawCard()
 }
 
+// Hand implements Sort interface
+func (hand Hand) Len() int {
+	return len(hand)
+}
+func (hand Hand) Less(i, j int) bool {
+	return hand[i].value < hand[j].value
+}
+func (hand Hand) Swap(i, j int) {
+	hand[i], hand[j] = hand[j], hand[i]
+}
+
 // PrettyPrint a player's hand. This is for the view.
 func (hand Hand) PrettyPrint() (result string) {
 	// First sort Cards then pretty print
+	sort.Sort(hand)
 	for i, card := range hand {
 		result += card.symbol + card.suit[:1]
 		if i != len(hand)-1 {
