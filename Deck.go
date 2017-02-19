@@ -16,35 +16,34 @@ func InitializeDeck() (deck Deck) {
 }
 
 // Shuffle does a random swap of each element in the array.
-func (deck *Deck) Shuffle() Deck {
+func (deck *Deck) Shuffle() (d Deck) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	d := *deck
+	d = *deck
 	for i := range d {
 		r := rand.Intn(len(d))
 		d[i], d[r] = d[r], d[i]
 	}
-	return d
+	return
 }
 
 // Deal cards to player's hands
 func (deck *Deck) Deal(p1, p2 *Player) {
 	count := 0
-	d := *deck
 	for len(p1.Hand) < 10 || len(p2.Hand) < 10 {
 		if count%2 == 0 {
-			d = d.DrawCard(&p1.Hand)
+			*deck = deck.DrawCard(&p1.Hand)
 		} else {
-			d = d.DrawCard(&p2.Hand)
+			*deck = deck.DrawCard(&p2.Hand)
 		}
 		count++
 	}
 }
 
 // DrawCard by popping a card from the Deck and appending it to a player's hand.
-func (deck *Deck) DrawCard(hand *Hand) Deck {
-	d := *deck
+func (deck *Deck) DrawCard(hand *Hand) (d Deck) {
+	d = *deck
 	card := d[len(d)-1]
 	d = d[:len(d)-1]
 	*hand = append(*hand, card)
-	return d
+	return
 }
