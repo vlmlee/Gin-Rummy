@@ -8,7 +8,7 @@ import (
 func TestDeckShouldHaveUniqueCards(t *testing.T) {
 	deck := InitializeDeck()
 	result := CheckDups(deck)
-	if !result {
+	if result {
 		t.Error("There is a duplicate card.")
 	}
 	return
@@ -56,13 +56,44 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 }
 
 // Checks for duplicate objects in an array.
-func CheckDups(deck []Card) bool {
+func CheckDups(arr []Card) bool {
 	dups := map[Card]bool{}
-	for _, card := range deck {
+	for _, card := range arr {
 		if dups[card] == true {
-			return false
+			return true
 		}
 		dups[card] = true
 	}
-	return true
+	return false
 }
+
+func TestDrawCards(t *testing.T) {
+	deck := InitializeDeck()
+	testHand := &Hand{}
+	deck.DrawCard(testHand)
+	if len(*testHand) == 0 {
+		t.Error("Failed to draw a card.")
+	}
+	deck.DrawCard(testHand)
+	if CheckDups(*testHand) {
+		t.Error("There are duplicates in the hand.")
+	}
+	return
+}
+
+// func TestDeckDealsTenCardsToPlayer(t *testing.T) {
+// 	deck := InitializeDeck()
+// 	p1 := &Player{"Michael", []Card{}}
+// 	p2 := &Player{"AI", []Card{}}
+// 	deck.Deal(p1, p2)
+// 	if len(p1.Hand) != 10 {
+// 		t.Error("Player one did not draw 10 cards!")
+// 	}
+// 	if len(p2.Hand) != 10 {
+// 		t.Error("Player two did not draw 10 card!")
+// 	}
+// 	if CheckDups(p1.Hand) || CheckDups(p2.Hand) {
+// 		t.Error("There are duplicate cards in the hands!")
+// 	}
+// 	return
+// }
