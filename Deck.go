@@ -29,20 +29,22 @@ func (deck *Deck) Shuffle() Deck {
 // Deal cards to player's hands
 func (deck *Deck) Deal(p1, p2 *Player) {
 	count := 0
-	for len(p1.Hand) <= 10 {
+	d := *deck
+	for len(p1.Hand) < 10 || len(p2.Hand) < 10 {
 		if count%2 == 0 {
-			deck.DrawCard(&p1.Hand)
+			d = d.DrawCard(&p1.Hand)
 		} else {
-			deck.DrawCard(&p2.Hand)
+			d = d.DrawCard(&p2.Hand)
 		}
 		count++
 	}
 }
 
 // DrawCard by popping a card from the Deck and appending it to a player's hand.
-func (deck *Deck) DrawCard(hand *Hand) {
+func (deck *Deck) DrawCard(hand *Hand) Deck {
 	d := *deck
 	card := d[len(d)-1]
 	d = d[:len(d)-1]
 	*hand = append(*hand, card)
+	return d
 }
