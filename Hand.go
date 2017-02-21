@@ -17,8 +17,6 @@ type BySuit Hand
 // PickUpAble describes a type that can add a card to player's hand. These
 // types are Deck and Stack.
 type PickUpAble interface {
-	Len() int
-	Pop() Card
 	DrawCard() Card
 }
 
@@ -57,12 +55,12 @@ func (s *Stack) Pop() Card {
 }
 
 // PrettyPrint a player's hand. This is for the view.
-func (hand Hand) PrettyPrint() (result string) {
+func (h Hand) PrettyPrint() (result string) {
 	// First sort Cards then pretty print
-	sort.Sort(ByValue(hand))
-	for i, card := range hand {
+	sort.Sort(ByValue(h))
+	for i, card := range h {
 		result += card.symbol + card.suit[:1]
-		if i != len(hand)-1 {
+		if i != len(h)-1 {
 			result += " "
 		}
 	}
@@ -70,13 +68,13 @@ func (hand Hand) PrettyPrint() (result string) {
 }
 
 // String() allows us to pretty print everytime we pass it to fmt.Print.
-func (hand *Hand) String() string {
-	return hand.PrettyPrint()
+func (h *Hand) String() string {
+	return h.PrettyPrint()
 }
 
 // CheckTotal checks the total number of points in a player's hand. It must be // less than 10 to knock.
-func (hand *Hand) CheckTotal() (total int) {
-	hand.CheckMeld()
+func (h *Hand) CheckTotal() (total int) {
+	h.CheckMeld()
 	// for i, card := range *hand {
 
 	// }
@@ -84,26 +82,29 @@ func (hand *Hand) CheckTotal() (total int) {
 }
 
 // CheckMeld checks the melds that can be made in the player's hand. There may // be more than one meld configuration for various hands.
-func (hand *Hand) CheckMeld() Hand {
-	sort.Sort(ByValue(*hand))
-	sort.Sort(BySuit(*hand))
-	return *hand
+func (h *Hand) CheckMeld() Hand {
+	sort.Sort(ByValue(*h))
+	sort.Sort(BySuit(*h))
+	return *h
 }
 
 // DrawCard by popping a card from a pickupable and appending it to a player's hand.
-func (hand *Hand) DrawCard(pickupable PickUpAble) (d *PickUpAble, err error) {
-	p := pickupable
-	if len(*hand) >= 11 {
+func (h *Hand) DrawCard(p *PickUpAble) (err error) {
+	if len(*h) >= 11 {
 		err = fmt.Errorf("cannot have a hand size more than 11")
 		return
 	}
-	card := p.Len()
-	p = p[:len(p)-1]
-	*hand = append(*hand, card)
+	*h = append(*h, (*p).DrawCard())
 	return
 }
 
 // DiscardCard places a card on top of the stack.
-func (hand *Hand) DiscardCard(stack *Stack) (err error) {
+func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
+	for i, v := range *h {
+		if card == v {
+			*h = append((*h)[:i], (*h)[i+1:]...)
+			*stack = append((*stack), card)
+		}
+	}
 	return
 }
