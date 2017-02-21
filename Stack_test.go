@@ -7,7 +7,7 @@ func TestStackInitializes(t *testing.T) {
 		{13, "Clubs", "K"},
 	}
 
-	stack := deck.InitalizeStack()
+	stack := deck.InitializeStack()
 	if len(stack) != 1 {
 		t.Error("Stack did not initialize.")
 	}

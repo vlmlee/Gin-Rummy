@@ -3,8 +3,8 @@ package main
 // Stack is the discard pile in Gin Rummy.
 type Stack []Card
 
-// InitalizeStack puts the top card of the deck onto the stack.
-func (d *Deck) InitalizeStack() (stack Stack) {
+// InitializeStack puts the top card of the deck onto the stack.
+func (d *Deck) InitializeStack() (stack Stack) {
 	card := (*d)[len(*d)-1]
 	*d = (*d)[:len(*d)-1]
 	stack = append(stack, card)
