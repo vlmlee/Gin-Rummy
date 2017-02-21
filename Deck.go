@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
@@ -17,38 +16,29 @@ func InitializeDeck() (deck Deck) {
 }
 
 // Shuffle does a random swap of each element in the array.
-func (deck *Deck) Shuffle() (d Deck) {
+func (d *Deck) Shuffle() {
 	rand.Seed(time.Now().UTC().UnixNano())
-	d = *deck
-	for i := range d {
-		r := rand.Intn(len(d))
-		d[i], d[r] = d[r], d[i]
+	for i := range *d {
+		r := rand.Intn(len(*d))
+		(*d)[i], (*d)[r] = (*d)[r], (*d)[i]
 	}
-	return
 }
 
 // Deal cards to player's hands
-func (deck *Deck) Deal(p1, p2 *Player) {
+func (d *Deck) Deal(p1, p2 *Player) {
 	count := 0
 	for len(p1.Hand) < 10 || len(p2.Hand) < 10 {
 		if count%2 == 0 {
-			*deck, _ = deck.DrawCard(&p1.Hand)
+			*d, _ = p1.Hand.DrawCard(d)
 		} else {
-			*deck, _ = deck.DrawCard(&p2.Hand)
+			*d, _ = p2.Hand.DrawCard(d)
 		}
 		count++
 	}
 }
 
-// DrawCard by popping a card from the Deck and appending it to a player's hand.
-func (deck *Deck) DrawCard(hand *Hand) (d Deck, err error) {
-	d = *deck
-	if len(*hand) >= 11 {
-		err = fmt.Errorf("cannot have a hand size more than 11")
-		return
-	}
-	card := d[len(d)-1]
-	d = d[:len(d)-1]
-	*hand = append(*hand, card)
-	return
+// DrawCard picks up a card from the deck.
+func (d *Deck) DrawCard() (card Card) {
+	*d = (*d)[:len(*d)-1]
+	return (*d)[len(*d)-1]
 }
