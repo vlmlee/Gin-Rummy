@@ -34,8 +34,8 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 		t.Error("The deck is not shuffled correctly")
 	}
 
-	shuffledDeck := deck.Shuffle()
-	if reflect.DeepEqual(shuffledDeck[:13], []Card{
+	deck.Shuffle()
+	if reflect.DeepEqual(deck, []Card{
 		{1, "Clubs", "A"},
 		{2, "Clubs", "2"},
 		{3, "Clubs", "3"},
@@ -58,13 +58,13 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 func TestDrawCards(t *testing.T) {
 	deck := InitializeDeck()
 	testHand := &Hand{}
-	deck, _ = deck.DrawCard(testHand)
+	testHand.DrawCard(&deck)
 
 	if len(*testHand) == 0 {
 		t.Error("Failed to draw a card.")
 	}
 
-	deck, _ = deck.DrawCard(testHand)
+	testHand.DrawCard(&deck)
 
 	if CheckDups(*testHand) {
 		t.Error("There are duplicates in the hand.")

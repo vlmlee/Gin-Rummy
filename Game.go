@@ -1,19 +1,57 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strings"
+)
+
 // StartNewGame initalizes the players, the deck, and deals cards to each
 // player.
 func StartNewGame() {
-	RummyDeck := InitializeDeck()
-	RummyStack := Stack{}
+	// RummyDeck := InitializeDeck()
+	// RummyStack := Stack{}
 }
 
 // Action describes what the player is going to do.
 func Action() {
+	reader := bufio.NewReader(os.Stdin)
 
+	for {
+		fmt.Println("What would you like to do?")
+		fmt.Println("DRAW CARD --- PICKUP CARD --- CHECK MELDS --- CHECK POINTS")
+		response, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Unrecognized command.")
+			continue
+		}
+		response = strings.ToUpper(strings.TrimSpace(response))
+		switch response {
+		case "DRAW":
+			// Draw card from deck
+		case "PICKUP":
+			// Draw card from stack
+		case "CHECK MELDS":
+			// Check the melds in your hand
+		case "CHECK TOTAL":
+			// Check the total of points in your hand, values not melded
+		}
+	}
+
+	fmt.Println("Discard a card from your hand.")
+
+	// Pretty print hand
+
+	// discard := reader.ReadString('\n')
+
+	// DiscardCardFromHand(discard)
+
+	// Pass turn to other player
 }
 
 // Log will log the details of each turn, that is, what actions the player and
-// the AI took.
+// the AI took, top card on the stack.
 func Log() {
 
 }
@@ -30,7 +68,7 @@ func Knock() {
 
 // EndGame will immediately end the game and close the program.
 func EndGame() {
-
+	os.Exit(0)
 }
 
 func main() {

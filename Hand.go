@@ -42,18 +42,6 @@ func (hand BySuit) Swap(i, j int) {
 	hand[i], hand[j] = hand[j], hand[i]
 }
 
-func (s *Stack) Len() int {
-	return len(*s)
-}
-
-func (d *Deck) Len() int {
-	return len(*d)
-}
-
-func (s *Stack) Pop() Card {
-	return (*s)[:len(*s)-1], (*s)[len(*s)]
-}
-
 // PrettyPrint a player's hand. This is for the view.
 func (h Hand) PrettyPrint() (result string) {
 	// First sort Cards then pretty print
@@ -89,12 +77,12 @@ func (h *Hand) CheckMeld() Hand {
 }
 
 // DrawCard by popping a card from a pickupable and appending it to a player's hand.
-func (h *Hand) DrawCard(p *PickUpAble) (err error) {
+func (h *Hand) DrawCard(p PickUpAble) (err error) {
 	if len(*h) >= 11 {
 		err = fmt.Errorf("cannot have a hand size more than 11")
 		return
 	}
-	*h = append(*h, (*p).DrawCard())
+	*h = append(*h, p.DrawCard())
 	return
 }
 

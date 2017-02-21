@@ -29,9 +29,9 @@ func (d *Deck) Deal(p1, p2 *Player) {
 	count := 0
 	for len(p1.Hand) < 10 || len(p2.Hand) < 10 {
 		if count%2 == 0 {
-			*d, _ = p1.Hand.DrawCard(d)
+			p1.Hand.DrawCard(d)
 		} else {
-			*d, _ = p2.Hand.DrawCard(d)
+			p2.Hand.DrawCard(d)
 		}
 		count++
 	}
@@ -39,6 +39,7 @@ func (d *Deck) Deal(p1, p2 *Player) {
 
 // DrawCard picks up a card from the deck.
 func (d *Deck) DrawCard() (card Card) {
+	card = (*d)[len(*d)-1]
 	*d = (*d)[:len(*d)-1]
-	return (*d)[len(*d)-1]
+	return
 }
