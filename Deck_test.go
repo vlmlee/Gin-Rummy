@@ -69,6 +69,9 @@ func TestDrawCards(t *testing.T) {
 	if CheckDups(*testHand) {
 		t.Error("There are duplicates in the hand.")
 	}
+	if len(deck) != 50 {
+		t.Errorf("Deck does not have 50 cards left but %d", len(deck))
+	}
 	return
 }
 
@@ -86,6 +89,9 @@ func TestDeckDealsTenCardsToPlayers(t *testing.T) {
 	}
 	if CheckDups(p1.Hand) || CheckDups(p2.Hand) {
 		t.Error("There are duplicate cards in the hands!")
+	}
+	if len(deck) != 32 {
+		t.Errorf("Deck does not have 32 cards left but %d", len(deck))
 	}
 	return
 }
