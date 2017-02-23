@@ -86,9 +86,10 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
 	totals := []int{}
+	melds := h.CheckMelds()
+
 SEARCH:
 	for _, card := range *h {
-		melds := h.CheckMelds()
 		for _, i := range melds {
 			for _, j := range i {
 				for _, k := range j {
