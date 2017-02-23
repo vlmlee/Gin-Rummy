@@ -13,3 +13,15 @@ func TestStackInitializes(t *testing.T) {
 	}
 	return
 }
+
+func TestStackTopCard(t *testing.T) {
+	deck := Deck{
+		{13, "Clubs", "K"},
+	}
+
+	stack := deck.InitializeStack()
+
+	if stack.PeekAtStack() != "KC" {
+		t.Error("Stack did not return correct card.")
+	}
+}

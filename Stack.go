@@ -17,3 +17,8 @@ func (s *Stack) DrawCard() (card Card) {
 	*s = (*s)[:len(*s)-1]
 	return
 }
+
+// PeekAtStack - reveals the top card on the stack.
+func (s *Stack) PeekAtStack() (card string) {
+	return (*s)[len(*s)-1].PrettyPrintCard()
+}

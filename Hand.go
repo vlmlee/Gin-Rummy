@@ -5,22 +5,22 @@ import (
 	"sort"
 )
 
-// Hand is the array of cards a player is holding. Max hand size will be ten card.
+// Hand - the array of cards a player is holding. Max hand size will be ten card.
 type Hand []Card
 
-// ByValue container for cards sorted by value.
+// ByValue - container for cards sorted by value.
 type ByValue Hand
 
-// BySuit container for cards sorted by suit.
+// BySuit - container for cards sorted by suit.
 type BySuit Hand
 
-// PickUpAble describes a type that can add a card to player's hand. These
+// PickUpAble - describes a type that can add a card to player's hand. These
 // types are Deck and Stack.
 type PickUpAble interface {
 	DrawCard() Card
 }
 
-// ByValue implemented by Sort
+// ByValue implements Sort method
 func (hand ByValue) Len() int {
 	return len(hand)
 }
@@ -31,7 +31,7 @@ func (hand ByValue) Swap(i, j int) {
 	hand[i], hand[j] = hand[j], hand[i]
 }
 
-// BySuit implemented by Sort
+// BySuit implements Sort method
 func (hand BySuit) Len() int {
 	return len(hand)
 }
@@ -55,28 +55,13 @@ func (h Hand) PrettyPrintHand() (result string) {
 	return
 }
 
-// String() allows us to pretty print everytime we pass it to fmt.Print.
+// String - allows us to pretty print everytime we pass it to fmt.Print.
 func (h *Hand) String() string {
 	return h.PrettyPrintHand()
 }
 
-// CheckTotal checks the total number of points in a player's hand. It must be // less than 10 to knock.
-func (h *Hand) CheckTotal() (total int) {
-	h.CheckMeld()
-	// for i, card := range *hand {
-
-	// }
-	return
-}
-
-// CheckMeld checks the melds that can be made in the player's hand. There may // be more than one meld configuration for various hands.
-func (h *Hand) CheckMeld() Hand {
-	sort.Sort(ByValue(*h))
-	sort.Sort(BySuit(*h))
-	return *h
-}
-
-// DrawCard by popping a card from a pickupable and appending it to a player's hand.
+// DrawCard by popping a card from a pickupable and appending it to a player's
+// hand.
 func (h *Hand) DrawCard(p PickUpAble) (err error) {
 	if len(*h) >= 11 {
 		return fmt.Errorf("cannot have a hand size more than 11")
@@ -95,4 +80,22 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 		}
 	}
 	return fmt.Errorf("could not find card in hand")
+}
+
+// CheckTotal - checks the total number of points in a player's hand. It must be
+// less than 10 to knock.
+func (h *Hand) CheckTotal() (total int) {
+	h.CheckMeld()
+	// for i, card := range *hand {
+
+	// }
+	return
+}
+
+// CheckMeld - checks the melds that can be made in the player's hand. There may
+// be more than one meld configuration for various hands.
+func (h *Hand) CheckMeld() Hand {
+	sort.Sort(ByValue(*h))
+	sort.Sort(BySuit(*h))
+	return *h
 }
