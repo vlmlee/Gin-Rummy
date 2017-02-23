@@ -94,8 +94,41 @@ func (h *Hand) CheckTotal() (total int) {
 
 // CheckMeld - checks the melds that can be made in the player's hand. There may
 // be more than one meld configuration for various hands.
-func (h *Hand) CheckMeld() Hand {
+func (h *Hand) CheckMeld() [][]Card {
+	melds := [][]Card{}
+
 	sort.Sort(ByValue(*h))
-	sort.Sort(BySuit(*h))
-	return *h
+	for i := 0; i < len(*h); i++ {
+		// Create a proto-meld. Since our hand is sorted by value,
+		// we can do a linear search and check by value to complete a meld.
+		meld := []Card{(*h)[i]}
+		for k, j := 1, i+1; j < len(*h); j++ {
+			// Search for the adjacent cards of ascending order.
+			if (*h)[i].value+k == (*h)[j].value {
+				if (*h)[i].suit == (*h)[j].suit {
+					meld = append(meld, (*h)[j])
+					k++
+				}
+			}
+		}
+		// If the length of the protomeld is less than 3, then it's not a meld.
+		if len(meld) >= 3 {
+			melds = append(melds, meld)
+		}
+	}
+
+	for i := 0; i < len(*h); i++ {
+		meld := []Card{(*h)[i]}
+		for j := i + 1; j < len(*h); j++ {
+			// Search for the cards of the same value.
+			if (*h)[i].value == (*h)[j].value {
+				meld = append(meld, (*h)[j])
+			}
+		}
+		// If the length of the protomeld is less than 3, then it's not a meld.
+		if len(meld) >= 3 {
+			melds = append(melds, meld)
+		}
+	}
+	return melds
 }

@@ -9,27 +9,42 @@ import (
 
 // StartNewGame initalizes the players, the deck, and deals cards to each
 // player.
-func StartNewGame() (err error) {
-	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Enter a name:")
-	name, err := reader.ReadString('\n')
-
-	if err != nil {
-		return fmt.Errorf("an error occurred with the name")
-	}
-
-	p1 := &Player{name, Hand{}}
+func StartNewGame(name *string, pScore, AIScore *int) (err error) {
+	p1 := &Player{*name, Hand{}}
 	p2 := &Player{"AI", Hand{}}
+	turn := p1
 	RummyDeck := InitializeDeck()
-	RummyStack := Stack{}
-
+	RummyStack := RummyDeck.InitializeStack()
+	fmt.Println(RummyStack)
 	RummyDeck.Deal(p1, p2)
 
-	Action()
+	// While Knock is false, keep the players in a loop that handle turns.
+	// We can set v := false
+	for v := Knock(); v; {
+		if turn == p1 {
+			Action(p1, &v)
+			turn = p2
+		} else {
+			Action(p2, &v)
+			turn = p1
+		}
+	}
+
+	fmt.Printf("Player score: %d AI score: %d \n", pScore, AIScore)
+	fmt.Println("Play again? (Y/N)")
+	reader := bufio.NewReader(os.Stdin)
+	response, err := reader.ReadString('\n')
+	response = strings.ToUpper(strings.TrimSpace(response))
+
+	// Start a new game
+	if response == "Y" {
+		StartNewGame(name, pScore, AIScore)
+	}
+	return
 }
 
 // Action describes what the player is going to do.
-func Action() {
+func Action(p *Player, knock *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
 	for {
@@ -66,31 +81,27 @@ func Action() {
 
 // Log will log the details of each turn, that is, what actions the player and
 // the AI took, top card on the stack.
-func Log() {
-
-}
-
-// Turn keeps the state of which player's turn it is. They must either draw a card from the top of the discard pile or from the top of the deck. Then they must discard a card from their hand.
-func Turn() {
+func Log(p *Player, action string) {
 
 }
 
 // Knock ends the game and calculates the number of points the knocking player // has won or lost. AI and player will show hands here.
-func Knock() {
-
-}
-
-// EndGame will immediately end the game and close the program.
-func EndGame() {
-	os.Exit(0)
+func Knock() bool {
+	return true
 }
 
 func main() {
-	var score int
-	StartNewGame()
-	// Play again?
-	// Tally score + replay with new scores
-	// if ... {
-	//		StartNewGame(score)
-	// }
+	pScore := 0
+	AIScore := 0
+
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Enter a name:")
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		fmt.Printf("An error occurred with the name")
+		os.Exit(0)
+	}
+
+	StartNewGame(&name, &pScore, &AIScore)
 }
