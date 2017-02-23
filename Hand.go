@@ -166,9 +166,10 @@ func (m Melds) PrettyPrintMelds() (melds string) {
 // made. Ex. 2C 3C 4C is a subset of 2C 3C 4C 5C 6C.
 func (m Protomeld) SubsetOfMeld(melds Meld) bool {
 	for _, ms := range melds {
-		for i := 3; i <= len(ms); i++ {
-			ms = ms[:i]
-			if reflect.DeepEqual(m, ms) {
+		for i := 0; i+len(m) <= len(ms); i++ {
+			subset := Protomeld{}
+			subset = ms[i : i+len(m)]
+			if reflect.DeepEqual(m, subset) {
 				return true
 			}
 		}
@@ -222,13 +223,15 @@ func (h *Hand) CheckMeldSeqFirst() Meld {
 		}
 		// If the length of the protomeld is less than 3, then it's not a meld.
 		if len(meld) >= 3 {
-			melds = append(melds, meld)
+			if !meld.SubsetOfMeld(melds) {
+				melds = append(melds, meld)
+			}
 		}
 	}
 	return melds
 }
 
-// CheckMeldMultFirst -checks the melds that can be made in the player's hand.
+// CheckMeldMultFirst - checks the melds that can be made in the player's hand.
 // This configuration checks for card multiples melds first and does not store
 // repeat cards.
 func (h *Hand) CheckMeldMultFirst() Meld {
@@ -245,7 +248,9 @@ func (h *Hand) CheckMeldMultFirst() Meld {
 		}
 		// If the length of the protomeld is less than 3, then it's not a meld.
 		if len(meld) >= 3 {
-			melds = append(melds, meld)
+			if !meld.SubsetOfMeld(melds) {
+				melds = append(melds, meld)
+			}
 		}
 	}
 
@@ -272,7 +277,9 @@ func (h *Hand) CheckMeldMultFirst() Meld {
 		}
 		// If the length of the protomeld is less than 3, then it's not a meld.
 		if len(meld) >= 3 {
-			melds = append(melds, meld)
+			if !meld.SubsetOfMeld(melds) {
+				melds = append(melds, meld)
+			}
 		}
 	}
 	return melds

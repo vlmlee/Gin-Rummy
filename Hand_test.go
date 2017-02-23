@@ -72,7 +72,7 @@ func TestCheckMeld(t *testing.T) {
 	}
 
 	meld1 := hand1.CheckMelds()
-	if reflect.DeepEqual(meld1, []Card{}) {
+	if reflect.DeepEqual(meld1, Meld{}) {
 		t.Error("There were melds when there should've been none.")
 	}
 
@@ -84,8 +84,8 @@ func TestCheckMeld(t *testing.T) {
 	}
 
 	meld2 := hand2.CheckMelds()
-	if reflect.DeepEqual(meld2, []Card{
-		{2, "Diamonds", "2"}, {3, "Diamonds", "3"}, {4, "Diamonds", "4"},
+	if reflect.DeepEqual(meld2, Meld{
+		{{2, "Diamonds", "2"}, {3, "Diamonds", "3"}, {4, "Diamonds", "4"}},
 	}) {
 		t.Error("The melds generated are incorrect. Expected 2D 3D 4D, got:", meld2)
 	}
@@ -98,7 +98,7 @@ func TestCheckMeld(t *testing.T) {
 	}
 
 	meld3 := hand3.CheckMelds()
-	if reflect.DeepEqual(meld3, [][]Card{
+	if reflect.DeepEqual(meld3, Meld{
 		{
 			{1, "Clubs", "A"}, {2, "Clubs", "2"}, {3, "Clubs", "3"},
 		},
@@ -110,6 +110,23 @@ func TestCheckMeld(t *testing.T) {
 		},
 	}) {
 		t.Error("The melds generated are incorrect.")
+	}
+
+	hand4 := Hand{
+		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
+		{5, "Diamonds", "5"},
+	}
+
+	meld4 := hand4.CheckMelds()
+	if reflect.DeepEqual(meld4, Meld{
+		{
+			{2, "Diamonds", "2"}, {3, "Diamonds", "3"}, {4, "Diamonds", "4"},
+			{5, "Diamonds", "5"},
+		},
+	}) {
+		t.Error("The meld generated are incorrected. Expected 2D 3D 4D 5D.")
 	}
 	return
 }
@@ -136,6 +153,6 @@ func TestPrettyPrintMeld(t *testing.T) {
 	}
 
 	meld := hand.CheckMelds()
-	fmt.Println(meld.PrettyPrintMelds())
+	fmt.Println(meld)
 	return
 }
