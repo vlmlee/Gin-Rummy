@@ -85,9 +85,30 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 // CheckTotal - checks the total number of points in a player's hand. It must be
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
-	// for i, card := range *hand {
+	totals := []int{}
+SEARCH:
+	for _, card := range *h {
+		melds := h.CheckMelds()
+		for _, i := range melds {
+			for _, j := range i {
+				for _, k := range j {
+					if card == k {
+						continue SEARCH
+					}
+					total += card.value
+				}
+			}
+			totals = append(totals, total)
+		}
+	}
 
-	// }
+	for _, min := range totals {
+		if total > min {
+			total = min
+		} else if total == 0 {
+			total = min
+		}
+	}
 	return
 }
 
