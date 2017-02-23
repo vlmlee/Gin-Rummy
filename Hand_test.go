@@ -70,7 +70,7 @@ func TestCheckMeld(t *testing.T) {
 		{11, "Clubs", "J"},
 	}
 
-	meld1 := hand1.CheckMeld()
+	meld1 := hand1.CheckMelds()
 	if reflect.DeepEqual(meld1, []Card{}) {
 		t.Error("There were melds when there should've been none.")
 	}
@@ -82,7 +82,7 @@ func TestCheckMeld(t *testing.T) {
 		{11, "Clubs", "J"},
 	}
 
-	meld2 := hand2.CheckMeld()
+	meld2 := hand2.CheckMelds()
 	if reflect.DeepEqual(meld2, []Card{
 		{2, "Diamonds", "2"}, {3, "Diamonds", "3"}, {4, "Diamonds", "4"},
 	}) {
@@ -96,7 +96,20 @@ func TestCheckMeld(t *testing.T) {
 		{3, "Clubs", "3"},
 	}
 
-	meld3 := hand3.CheckMeld()
+	meld3 := hand3.CheckMelds()
+	if reflect.DeepEqual(meld3, [][]Card{
+		{
+			{1, "Clubs", "A"}, {2, "Clubs", "2"}, {3, "Clubs", "3"},
+		},
+		{
+			{2, "Diamonds", "2"}, {3, "Diamonds", "3"}, {4, "Diamonds", "4"},
+		},
+		{
+			{3, "Clubs", "3"}, {3, "Diamonds", "3"}, {3, "Spades", "3"},
+		},
+	}) {
+		t.Error("The melds generated are incorrect.")
+	}
 	return
 }
 

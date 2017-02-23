@@ -85,16 +85,23 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 // CheckTotal - checks the total number of points in a player's hand. It must be
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
-	h.CheckMeld()
 	// for i, card := range *hand {
 
 	// }
 	return
 }
 
-// CheckMeld - checks the melds that can be made in the player's hand. There may
-// be more than one meld configuration for various hands.
-func (h *Hand) CheckMeld() [][]Card {
+// CheckMelds - gets all the possible melds that can be created with a hand.
+func (h *Hand) CheckMelds() (melds [][][]Card) {
+	melds = append(melds, h.CheckMeldSeqFirst())
+	melds = append(melds, h.CheckMeldMultFirst())
+	return
+}
+
+// CheckMeldSeqFirst - checks the melds that can be made in the player's hand.
+// This configuration checks for sequential melds first and does not store
+// repeat cards.
+func (h *Hand) CheckMeldSeqFirst() [][]Card {
 	melds := [][]Card{}
 
 	sort.Sort(ByValue(*h))
@@ -119,10 +126,68 @@ func (h *Hand) CheckMeld() [][]Card {
 
 	for i := 0; i < len(*h); i++ {
 		meld := []Card{(*h)[i]}
+	SEARCH:
+		for j := i + 1; j < len(*h); j++ {
+			// Search for the cards of the same value.
+			if (*h)[i].value == (*h)[j].value {
+				for _, m := range melds {
+					for _, n := range m {
+						if n == (*h)[j] {
+							continue SEARCH
+						}
+					}
+				}
+				meld = append(meld, (*h)[j])
+			}
+		}
+		// If the length of the protomeld is less than 3, then it's not a meld.
+		if len(meld) >= 3 {
+			melds = append(melds, meld)
+		}
+	}
+	return melds
+}
+
+// CheckMeldMultFirst -checks the melds that can be made in the player's hand.
+// This configuration checks for card multiples melds first and does not store
+// repeat cards.
+func (h *Hand) CheckMeldMultFirst() [][]Card {
+	melds := [][]Card{}
+
+	sort.Sort(ByValue(*h))
+	for i := 0; i < len(*h); i++ {
+		meld := []Card{(*h)[i]}
 		for j := i + 1; j < len(*h); j++ {
 			// Search for the cards of the same value.
 			if (*h)[i].value == (*h)[j].value {
 				meld = append(meld, (*h)[j])
+			}
+		}
+		// If the length of the protomeld is less than 3, then it's not a meld.
+		if len(meld) >= 3 {
+			melds = append(melds, meld)
+		}
+	}
+
+	for i := 0; i < len(*h); i++ {
+		// Create a proto-meld. Since our hand is sorted by value,
+		// we can do a linear search and check by value to complete a meld.
+		meld := []Card{(*h)[i]}
+	SEARCH:
+		for k, j := 1, i+1; j < len(*h); j++ {
+			// Search for the adjacent cards of ascending order.
+			if (*h)[i].value+k == (*h)[j].value {
+				if (*h)[i].suit == (*h)[j].suit {
+					for _, m := range melds {
+						for _, n := range m {
+							if n == (*h)[j] {
+								continue SEARCH
+							}
+						}
+					}
+					meld = append(meld, (*h)[j])
+					k++
+				}
 			}
 		}
 		// If the length of the protomeld is less than 3, then it's not a meld.
