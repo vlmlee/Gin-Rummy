@@ -9,9 +9,23 @@ import (
 
 // StartNewGame initalizes the players, the deck, and deals cards to each
 // player.
-func StartNewGame() {
-	// RummyDeck := InitializeDeck()
-	// RummyStack := Stack{}
+func StartNewGame() (err error) {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Println("Enter a name:")
+	name, err := reader.ReadString('\n')
+
+	if err != nil {
+		return fmt.Errorf("an error occurred with the name")
+	}
+
+	p1 := &Player{name, Hand{}}
+	p2 := &Player{"AI", Hand{}}
+	RummyDeck := InitializeDeck()
+	RummyStack := Stack{}
+
+	RummyDeck.Deal(p1, p2)
+
+	Action()
 }
 
 // Action describes what the player is going to do.
@@ -72,7 +86,7 @@ func EndGame() {
 }
 
 func main() {
-	// var score int
+	var score int
 	StartNewGame()
 	// Play again?
 	// Tally score + replay with new scores

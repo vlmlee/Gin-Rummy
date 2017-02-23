@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-// Hand - the array of cards a player is holding. Max hand size will be ten card.
+// Hand - the array of cards a player is holding. Max hand size will be eleven card.
 type Hand []Card
 
 // ByValue - container for cards sorted by value.

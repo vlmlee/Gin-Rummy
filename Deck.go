@@ -8,14 +8,14 @@ import (
 // Deck is an array of Card objects.
 type Deck []Card
 
-// InitializeDeck will create a deck of 52 cards and shuffle them.
+// InitializeDeck - creates a deck of 52 cards and shuffle them.
 func InitializeDeck() (deck Deck) {
 	deck = CreateDeckOfCards()
 	deck.Shuffle()
 	return
 }
 
-// Shuffle does a random swap of each element in the array.
+// Shuffle - does a random swap of each element in the array.
 func (d *Deck) Shuffle() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	for i := range *d {
@@ -37,7 +37,7 @@ func (d *Deck) Deal(p1, p2 *Player) {
 	}
 }
 
-// DrawCard picks up a card from the deck.
+// DrawCard - picks up a card from the deck.
 func (d *Deck) DrawCard() (card Card) {
 	card = (*d)[len(*d)-1]
 	*d = (*d)[:len(*d)-1]
