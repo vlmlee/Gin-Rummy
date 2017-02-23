@@ -146,7 +146,7 @@ func (h *Hand) CheckMelds() (melds Melds) {
 
 // PrettyPrintMelds - pretty prints the melds and makes it readable.
 func (m Melds) PrettyPrintMelds() (melds string) {
-	if len(m) == 0 {
+	if reflect.DeepEqual(m, Melds{{}}) {
 		return "No melds in hand."
 	}
 

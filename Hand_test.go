@@ -156,3 +156,17 @@ func TestPrettyPrintMeld(t *testing.T) {
 	fmt.Println(meld)
 	return
 }
+
+func TestPrettyPrintMeldNoMelds(t *testing.T) {
+	hand := Hand{
+		{13, "Clubs", "K"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {6, "Diamonds", "6"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {5, "Clubs", "5"}, {7, "Hearts", "7"},
+		{11, "Clubs", "J"},
+	}
+
+	melds := hand.CheckMelds()
+	if melds.PrettyPrintMelds() != "No melds in hand." {
+		t.Errorf("Output should be 'No melds in hand'. Instead got: %s", melds.PrettyPrintMelds())
+	}
+}

@@ -65,7 +65,7 @@ ACTIONS:
 			break ACTIONS
 		case "3", "CHECK MELDS":
 			melds := p.Hand.CheckMelds()
-			melds.PrettyPrintMelds()
+			fmt.Printf("\n%s\n", melds.PrettyPrintMelds())
 		case "4", "CHECK POINTS":
 			// Check the total of points in your hand, values not melded
 		default:
