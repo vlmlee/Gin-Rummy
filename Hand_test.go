@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -114,5 +115,27 @@ func TestCheckMeld(t *testing.T) {
 }
 
 func TestCheckTotal(t *testing.T) {
+	hand := Hand{
+		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
+		{3, "Clubs", "3"},
+	}
+
+	total := hand.CheckTotal()
+	fmt.Println(total)
+	return
+}
+
+func TestPrettyPrintMeld(t *testing.T) {
+	hand := Hand{
+		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
+		{3, "Clubs", "3"},
+	}
+
+	meld := hand.CheckMelds()
+	fmt.Println(meld.PrettyPrintMelds())
 	return
 }

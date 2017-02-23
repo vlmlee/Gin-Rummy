@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-// Card - type that has a suit, value, and symbol (AJQK or numeric).
+// Card - type that has a suit, value, and rank (AJQK or numeric).
 type Card struct {
-	value  int
-	suit   string
-	symbol string
+	value int
+	suit  string
+	rank  string
 }
 
 // CreateDeckOfCards - does a linear map of suits and values and returns a deck
@@ -21,14 +21,14 @@ func CreateDeckOfCards() (deck Deck) {
 	deck = make([]Card, 0)
 	for _, suit := range suits {
 		for _, value := range values {
-			deck = append(deck, GetCardWithSymbol(value, suit))
+			deck = append(deck, GetCardWithRank(value, suit))
 		}
 	}
 	return
 }
 
-// GetCardWithSymbol - appends the face value to the Card object.
-func GetCardWithSymbol(value int, suit string) Card {
+// GetCardWithRank - appends the face value to the Card object.
+func GetCardWithRank(value int, suit string) Card {
 	switch value {
 	case 1:
 		return Card{value, suit, "A"}
@@ -43,12 +43,16 @@ func GetCardWithSymbol(value int, suit string) Card {
 	}
 }
 
-// PrettyPrintCard - pretty prints a card into "SYMBOL-SUIT".
+// PrettyPrintCard - pretty prints a card into "RANK-SUIT".
 func (c Card) PrettyPrintCard() string {
-	return c.symbol + c.suit[:1]
+	return c.rank + c.suit[:1]
 }
 
-// GetCardFromPrettyPrint - transforms a card in the format "SYMBOL-SUIT" into
+func (c *Card) String() string {
+	return c.PrettyPrintCard()
+}
+
+// GetCardFromPrettyPrint - transforms a card in the format "RANK-SUIT" into
 // a card.
 func GetCardFromPrettyPrint(p string) (card Card, err error) {
 	var suit string
@@ -81,6 +85,6 @@ func GetCardFromPrettyPrint(p string) (card Card, err error) {
 		return card, fmt.Errorf("unidentified card suit")
 	}
 
-	card = GetCardWithSymbol(value, suit)
+	card = GetCardWithRank(value, suit)
 	return
 }

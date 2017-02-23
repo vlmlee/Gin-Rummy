@@ -2,11 +2,23 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
+	"strconv"
 )
 
 // Hand - the array of cards a player is holding. Max hand size will be eleven card.
 type Hand []Card
+
+// Protomeld - not quite a full meld, but container for candidate melds.
+type Protomeld []Card
+
+// Meld - Rummy standard melds. Must be at least three sequential cards of the
+// same suit (ex. 2H-3H-4H) or at least three cards of same rank.
+type Meld [][]Card
+
+// Melds - array of possible configuration of melds in a player's hand.
+type Melds [][][]Card
 
 // ByValue - container for cards sorted by value.
 type ByValue Hand
@@ -47,7 +59,7 @@ func (h Hand) PrettyPrintHand() (result string) {
 	// First sort Cards then pretty print
 	sort.Sort(ByValue(h))
 	for i, card := range h {
-		result += card.symbol + card.suit[:1]
+		result += card.rank + card.suit[:1]
 		if i != len(h)-1 {
 			result += " "
 		}
@@ -82,6 +94,10 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 	return fmt.Errorf("could not find card in hand")
 }
 
+func (h *Hand) CheckUnmeldedCards() {
+	return
+}
+
 // CheckTotal - checks the total number of points in a player's hand. It must be
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
@@ -90,17 +106,18 @@ func (h *Hand) CheckTotal() (total int) {
 
 SEARCH:
 	for _, card := range *h {
+		total = 0
 		for _, i := range melds {
 			for _, j := range i {
 				for _, k := range j {
 					if card == k {
 						continue SEARCH
 					}
-					total += card.value
 				}
 			}
-			totals = append(totals, total)
+			total += card.value
 		}
+		totals = append(totals, total)
 	}
 
 	for _, min := range totals {
@@ -114,23 +131,62 @@ SEARCH:
 }
 
 // CheckMelds - gets all the possible melds that can be created with a hand.
-func (h *Hand) CheckMelds() (melds [][][]Card) {
-	melds = append(melds, h.CheckMeldSeqFirst())
-	melds = append(melds, h.CheckMeldMultFirst())
+func (h *Hand) CheckMelds() (melds Melds) {
+	seq := h.CheckMeldSeqFirst()
+	mult := h.CheckMeldMultFirst()
+
+	if reflect.DeepEqual(seq, mult) {
+		melds = append(melds, seq)
+		return
+	}
+
+	melds = append(melds, seq, mult)
 	return
+}
+
+// PrettyPrintMelds - pretty prints the melds and makes it readable.
+func (m Melds) PrettyPrintMelds() (melds string) {
+	if len(m) == 0 {
+		return "No melds in hand."
+	}
+
+	for index, i := range m {
+		melds += "Meld " + strconv.Itoa(index+1) + ": "
+		for _, j := range i {
+			for _, k := range j {
+				melds += k.rank + k.suit[:1] + " "
+			}
+		}
+		melds += "\n"
+	}
+	return
+}
+
+// SubsetOfMeld - checks if a meld being made is a subset of a previous meld
+// made. Ex. 2C 3C 4C is a subset of 2C 3C 4C 5C 6C.
+func (m Protomeld) SubsetOfMeld(melds Meld) bool {
+	for _, ms := range melds {
+		for i := 3; i <= len(ms); i++ {
+			ms = ms[:i]
+			if reflect.DeepEqual(m, ms) {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 // CheckMeldSeqFirst - checks the melds that can be made in the player's hand.
 // This configuration checks for sequential melds first and does not store
 // repeat cards.
-func (h *Hand) CheckMeldSeqFirst() [][]Card {
-	melds := [][]Card{}
+func (h *Hand) CheckMeldSeqFirst() Meld {
+	melds := Meld{}
 
 	sort.Sort(ByValue(*h))
 	for i := 0; i < len(*h); i++ {
 		// Create a proto-meld. Since our hand is sorted by value,
 		// we can do a linear search and check by value to complete a meld.
-		meld := []Card{(*h)[i]}
+		meld := Protomeld{(*h)[i]}
 		for k, j := 1, i+1; j < len(*h); j++ {
 			// Search for the adjacent cards of ascending order.
 			if (*h)[i].value+k == (*h)[j].value {
@@ -142,12 +198,14 @@ func (h *Hand) CheckMeldSeqFirst() [][]Card {
 		}
 		// If the length of the protomeld is less than 3, then it's not a meld.
 		if len(meld) >= 3 {
-			melds = append(melds, meld)
+			if !meld.SubsetOfMeld(melds) {
+				melds = append(melds, meld)
+			}
 		}
 	}
 
 	for i := 0; i < len(*h); i++ {
-		meld := []Card{(*h)[i]}
+		meld := Protomeld{(*h)[i]}
 	SEARCH:
 		for j := i + 1; j < len(*h); j++ {
 			// Search for the cards of the same value.
@@ -173,12 +231,12 @@ func (h *Hand) CheckMeldSeqFirst() [][]Card {
 // CheckMeldMultFirst -checks the melds that can be made in the player's hand.
 // This configuration checks for card multiples melds first and does not store
 // repeat cards.
-func (h *Hand) CheckMeldMultFirst() [][]Card {
-	melds := [][]Card{}
+func (h *Hand) CheckMeldMultFirst() Meld {
+	melds := Meld{}
 
 	sort.Sort(ByValue(*h))
 	for i := 0; i < len(*h); i++ {
-		meld := []Card{(*h)[i]}
+		meld := Protomeld{(*h)[i]}
 		for j := i + 1; j < len(*h); j++ {
 			// Search for the cards of the same value.
 			if (*h)[i].value == (*h)[j].value {
@@ -194,7 +252,7 @@ func (h *Hand) CheckMeldMultFirst() [][]Card {
 	for i := 0; i < len(*h); i++ {
 		// Create a proto-meld. Since our hand is sorted by value,
 		// we can do a linear search and check by value to complete a meld.
-		meld := []Card{(*h)[i]}
+		meld := Protomeld{(*h)[i]}
 	SEARCH:
 		for k, j := 1, i+1; j < len(*h); j++ {
 			// Search for the adjacent cards of ascending order.

@@ -15,23 +15,21 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	turn := p1
 	RummyDeck := InitializeDeck()
 	RummyStack := RummyDeck.InitializeStack()
-	fmt.Println(RummyStack)
 	RummyDeck.Deal(p1, p2)
 
 	// While Knock is false, keep the players in a loop that handle turns.
 	// We can set v := false
 	for v := Knock(); v; {
 		if turn == p1 {
-			Action(p1, &v)
+			Action(p1, &RummyDeck, &RummyStack, &v)
 			turn = p2
 		} else {
-			Action(p2, &v)
+			Action(p2, &RummyDeck, &RummyStack, &v)
 			turn = p1
 		}
 	}
 
-	fmt.Printf("Player score: %d AI score: %d \n", pScore, AIScore)
-	fmt.Println("Play again? (Y/N)")
+	fmt.Printf("Player score: %d AI score: %d \n Play again? (Y/N)", pScore, AIScore)
 	reader := bufio.NewReader(os.Stdin)
 	response, err := reader.ReadString('\n')
 	response = strings.ToUpper(strings.TrimSpace(response))
@@ -44,31 +42,38 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 }
 
 // Action describes what the player is going to do.
-func Action(p *Player, knock *bool) {
+func Action(p *Player, deck *Deck, stack *Stack, knock *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
+ACTIONS:
 	for {
-		fmt.Println("What would you like to do?")
-		fmt.Println("DRAW CARD --- PICKUP CARD --- CHECK MELDS --- CHECK POINTS")
+		fmt.Printf("Card on stack: %s \nYour hand: %s \n", stack.PeekAtStack(), p.PrettyPrintHand())
+		fmt.Printf("\nWhat would you like to do, %s?\n 1. DRAW CARD\n 2. PICKUP CARD FROM STACK\n 3. CHECK MELDS\n 4. CHECK POINTS\n", p.name)
 		response, err := reader.ReadString('\n')
+		response = strings.TrimRight(response, "\n")
 		if err != nil {
 			fmt.Println("Unrecognized command.")
 			continue
 		}
 		response = strings.ToUpper(strings.TrimSpace(response))
 		switch response {
-		case "DRAW":
-			// Draw card from deck
-		case "PICKUP":
-			// Draw card from stack
-		case "CHECK MELDS":
-			// Check the melds in your hand
-		case "CHECK TOTAL":
+		case "1", "DRAW CARD":
+			p.Hand.DrawCard(deck)
+			break ACTIONS
+		case "2", "PICKUP CARD FROM STACK":
+			p.Hand.DrawCard(stack)
+			break ACTIONS
+		case "3", "CHECK MELDS":
+			melds := p.Hand.CheckMelds()
+			melds.PrettyPrintMelds()
+		case "4", "CHECK POINTS":
 			// Check the total of points in your hand, values not melded
+		default:
+			fmt.Printf("\nUnrecognized command. Try again.\n\n")
 		}
 	}
 
-	fmt.Println("Discard a card from your hand.")
+	fmt.Println("Now, you must discard a card from your hand.")
 
 	// Pretty print hand
 
@@ -95,13 +100,17 @@ func main() {
 	AIScore := 0
 
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Println("Enter a name:")
+	fmt.Println("Enter your name:")
 	name, err := reader.ReadString('\n')
+	name = strings.TrimRight(name, "\n")
+	fmt.Printf("\n")
 
 	if err != nil {
 		fmt.Printf("An error occurred with the name")
 		os.Exit(0)
 	}
 
+	fmt.Printf("Welcome %s! Lets play a game of Gin Rummy!\n", name)
+	fmt.Printf("\n")
 	StartNewGame(&name, &pScore, &AIScore)
 }
