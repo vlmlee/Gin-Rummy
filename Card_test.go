@@ -32,3 +32,29 @@ func TestCreatesCompleteDeck(t *testing.T) {
 	}
 	return
 }
+
+func TestPrettyPrintCard(t *testing.T) {
+	card := Card{4, "Hearts", "4"}
+	if card.PrettyPrintCard() != "4H" {
+		t.Error("Card did not pretty print to 4H!")
+	}
+	return
+}
+
+func TestGetCardFromPrettyPrint(t *testing.T) {
+	card, err := GetCardFromPrettyPrint("4H")
+	if (card != Card{4, "Hearts", "4"}) {
+		t.Error("Pretty printed 4H did not return a valid card!")
+	}
+
+	_, err = GetCardFromPrettyPrint("3E")
+	if err == nil {
+		t.Error("GetCardFromPrettyPrint did not catch suit error!")
+	}
+
+	card, err = GetCardFromPrettyPrint("KS")
+	if (card != Card{13, "Spades", "K"}) {
+		t.Error("Pretty printed KS did not return a valid card!")
+	}
+	return
+}

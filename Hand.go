@@ -42,8 +42,8 @@ func (hand BySuit) Swap(i, j int) {
 	hand[i], hand[j] = hand[j], hand[i]
 }
 
-// PrettyPrint a player's hand. This is for the view.
-func (h Hand) PrettyPrint() (result string) {
+// PrettyPrintHand - pretty prints a player's hand. This is for the view.
+func (h Hand) PrettyPrintHand() (result string) {
 	// First sort Cards then pretty print
 	sort.Sort(ByValue(h))
 	for i, card := range h {
@@ -57,7 +57,7 @@ func (h Hand) PrettyPrint() (result string) {
 
 // String() allows us to pretty print everytime we pass it to fmt.Print.
 func (h *Hand) String() string {
-	return h.PrettyPrint()
+	return h.PrettyPrintHand()
 }
 
 // CheckTotal checks the total number of points in a player's hand. It must be // less than 10 to knock.
@@ -79,8 +79,7 @@ func (h *Hand) CheckMeld() Hand {
 // DrawCard by popping a card from a pickupable and appending it to a player's hand.
 func (h *Hand) DrawCard(p PickUpAble) (err error) {
 	if len(*h) >= 11 {
-		err = fmt.Errorf("cannot have a hand size more than 11")
-		return
+		return fmt.Errorf("cannot have a hand size more than 11")
 	}
 	*h = append(*h, p.DrawCard())
 	return
@@ -92,7 +91,8 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 		if card == v {
 			*h = append((*h)[:i], (*h)[i+1:]...)
 			*stack = append((*stack), card)
+			return
 		}
 	}
-	return
+	return fmt.Errorf("could not find card in hand")
 }

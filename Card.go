@@ -1,17 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 )
 
-// Card is an type that has a suit, value, and symbol (AJQK or numeric).
+// Card - type that has a suit, value, and symbol (AJQK or numeric).
 type Card struct {
 	value  int
 	suit   string
 	symbol string
 }
 
-// CreateDeckOfCards does a linear map of suits and values and returns a deck
+// CreateDeckOfCards - does a linear map of suits and values and returns a deck
 // of 52 cards.
 func CreateDeckOfCards() (deck Deck) {
 	suits := []string{"Clubs", "Diamonds", "Hearts", "Spades"}
@@ -19,14 +21,14 @@ func CreateDeckOfCards() (deck Deck) {
 	deck = make([]Card, 0)
 	for _, suit := range suits {
 		for _, value := range values {
-			deck = append(deck, DetermineCardSymbol(value, suit))
+			deck = append(deck, GetCardWithSymbol(value, suit))
 		}
 	}
 	return
 }
 
-// DetermineCardSymbol appends the face value to the Card object.
-func DetermineCardSymbol(value int, suit string) Card {
+// GetCardWithSymbol - appends the face value to the Card object.
+func GetCardWithSymbol(value int, suit string) Card {
 	switch value {
 	case 1:
 		return Card{value, suit, "A"}
@@ -39,4 +41,46 @@ func DetermineCardSymbol(value int, suit string) Card {
 	default:
 		return Card{value, suit, strconv.Itoa(value)}
 	}
+}
+
+// PrettyPrintCard - pretty prints a card into "SYMBOL-SUIT".
+func (c Card) PrettyPrintCard() string {
+	return c.symbol + c.suit[:1]
+}
+
+// GetCardFromPrettyPrint - transforms a card in the format "SYMBOL-SUIT" into
+// a card.
+func GetCardFromPrettyPrint(p string) (card Card, err error) {
+	var suit string
+	var value int
+
+	s := strings.Split(p, "")
+	switch s[0] {
+	case "A":
+		value = 1
+	case "J":
+		value = 11
+	case "Q":
+		value = 12
+	case "K":
+		value = 13
+	default:
+		value, err = strconv.Atoi(s[0])
+	}
+
+	switch s[1] {
+	case "C":
+		suit = "Clubs"
+	case "D":
+		suit = "Diamonds"
+	case "H":
+		suit = "Hearts"
+	case "S":
+		suit = "Spades"
+	default:
+		return card, fmt.Errorf("unidentified card suit")
+	}
+
+	card = GetCardWithSymbol(value, suit)
+	return
 }
