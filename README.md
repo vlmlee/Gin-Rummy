@@ -1,8 +1,8 @@
-# Gin-Rummy
+# Gin Rummy
 
-####The Gin Rummy card game implemented in Go.
+####The Gin Rummy card game implemented in Go by Michael Lee.
 
-This is my favorite two player card game of all time and Go has been a really great language to use so I decided to implement it in Go.
+This is my favorite two player card game of all time and Go has been a really great language to use so I decided to implement Gin Rummy in Go.
 
 ## How to Install
 
