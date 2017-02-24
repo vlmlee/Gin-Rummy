@@ -13,6 +13,9 @@ type Hand []Card
 // Protomeld - not quite a full meld, but container for candidate melds.
 type Protomeld []Card
 
+// Unmelded - cards that are not in a meld.
+type Unmelded []Card
+
 // Meld - Rummy standard melds. Must be at least three sequential cards of the
 // same suit (ex. 2H-3H-4H) or at least three cards of same rank.
 type Meld [][]Card
@@ -30,6 +33,11 @@ type BySuit Hand
 // types are Deck and Stack.
 type PickUpAble interface {
 	DrawCard() Card
+}
+
+// HasCard - describes a type that can look and see if it has a certain card.
+type HasCard interface {
+	ContainsCard() bool
 }
 
 // ByValue implements Sort method
@@ -82,7 +90,7 @@ func (h *Hand) DrawCard(p PickUpAble) (err error) {
 	return
 }
 
-// DiscardCard places a card on top of the stack.
+// DiscardCard - places a card on top of the stack.
 func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 	for i, v := range *h {
 		if card == v {
@@ -94,38 +102,53 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
 	return fmt.Errorf("could not find card in hand")
 }
 
-func (h *Hand) CheckUnmeldedCards() {
+// CheckUnmeldedCards - returns cards not in a meld configuration.
+func (h *Hand) CheckUnmeldedCards() (unmelded Unmelded) {
+	meldConfig := h.CheckMelds()
+SEARCH_UNMELDED_CARDS:
+	for _, cardInHand := range *h {
+		for _, melds := range meldConfig {
+			for _, meld := range melds {
+				for _, cardInMeld := range meld {
+					if cardInHand == cardInMeld {
+						continue SEARCH_UNMELDED_CARDS
+					}
+				}
+			}
+			if !unmelded.ContainsCard(cardInHand) {
+				unmelded = append(unmelded, cardInHand)
+			}
+		}
+	}
 	return
+}
+
+// ContainsCard - checks and sees if the card is in the unmelded set.
+func (u Unmelded) ContainsCard(card Card) bool {
+	for _, c := range u {
+		if c == card {
+			return true
+		}
+	}
+	return false
+}
+
+// ContainsCard - checks and sees if the card is in the player's hand.
+func (h Hand) ContainsCard(card Card) bool {
+	for _, c := range h {
+		if c == card {
+			return true
+		}
+	}
+	return false
 }
 
 // CheckTotal - checks the total number of points in a player's hand. It must be
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
-	totals := []int{}
-	melds := h.CheckMelds()
-
-SEARCH:
-	for _, card := range *h {
-		total = 0
-		for _, i := range melds {
-			for _, j := range i {
-				for _, k := range j {
-					if card == k {
-						continue SEARCH
-					}
-				}
-			}
-			total += card.value
-		}
-		totals = append(totals, total)
-	}
-
-	for _, min := range totals {
-		if total > min {
-			total = min
-		} else if total == 0 {
-			total = min
-		}
+	cards := h.CheckUnmeldedCards()
+	for _, card := range cards {
+		total += card.value
 	}
 	return
 }

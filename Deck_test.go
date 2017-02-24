@@ -16,7 +16,7 @@ func TestDeckShouldHaveUniqueCards(t *testing.T) {
 
 func TestDeckShouldBeShuffled(t *testing.T) {
 	deck := InitializeDeck()
-	if reflect.DeepEqual(deck[:13], []Card{
+	if reflect.DeepEqual(deck[:13], Deck{
 		{1, "Clubs", "A"},
 		{2, "Clubs", "2"},
 		{3, "Clubs", "3"},
@@ -35,7 +35,7 @@ func TestDeckShouldBeShuffled(t *testing.T) {
 	}
 
 	deck.Shuffle()
-	if reflect.DeepEqual(deck, []Card{
+	if reflect.DeepEqual(deck, Deck{
 		{1, "Clubs", "A"},
 		{2, "Clubs", "2"},
 		{3, "Clubs", "3"},
@@ -77,8 +77,8 @@ func TestDrawCards(t *testing.T) {
 
 func TestDeckDealsTenCardsToPlayers(t *testing.T) {
 	deck := InitializeDeck()
-	p1 := &Player{"Michael", []Card{}}
-	p2 := &Player{"AI", []Card{}}
+	p1 := &Player{"Michael", Hand{}}
+	p2 := &Player{"AI", Hand{}}
 	deck.Deal(p1, p2)
 
 	if len(p1.Hand) != 10 {
@@ -96,7 +96,7 @@ func TestDeckDealsTenCardsToPlayers(t *testing.T) {
 	return
 }
 
-// Checks for duplicate objects in an array.
+// Checks for duplicate objects in a array that have Card types.
 func CheckDups(arr []Card) bool {
 	dups := map[Card]bool{}
 	for _, card := range arr {

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"testing"
 )
@@ -49,10 +48,10 @@ func TestDiscardCard(t *testing.T) {
 	stack := &Stack{}
 	hand.DiscardCard(Card{4, "Hearts", "4"}, stack)
 
-	if reflect.DeepEqual(hand, []Card{
+	if reflect.DeepEqual(hand, []Hand{{
 		{13, "Clubs", "K"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
 		{6, "Diamonds", "6"}, {12, "Spades", "Q"}, {3, "Spades", "3"},
-		{5, "Clubs", "5"}, {7, "Hearts", "7"}, {11, "Clubs", "J"},
+		{5, "Clubs", "5"}, {7, "Hearts", "7"}, {11, "Clubs", "J"}},
 	}) {
 		t.Error("Hand did not discard card 4 of Hearts.")
 	}
@@ -131,19 +130,6 @@ func TestCheckMeld(t *testing.T) {
 	return
 }
 
-func TestCheckTotal(t *testing.T) {
-	hand := Hand{
-		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
-		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
-		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
-		{3, "Clubs", "3"},
-	}
-
-	total := hand.CheckTotal()
-	fmt.Println(total)
-	return
-}
-
 func TestPrettyPrintMeld(t *testing.T) {
 	hand := Hand{
 		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
@@ -153,7 +139,9 @@ func TestPrettyPrintMeld(t *testing.T) {
 	}
 
 	meld := hand.CheckMelds()
-	fmt.Println(meld)
+	if meld.PrettyPrintMelds() != "Meld 1: AC 2C 3C 2D 3D 4D \nMeld 2: 3C 3D 3S \n" {
+		t.Error("Output for pretty print did not appear as expected.")
+	}
 	return
 }
 
@@ -169,4 +157,38 @@ func TestPrettyPrintMeldNoMelds(t *testing.T) {
 	if melds.PrettyPrintMelds() != "No melds in hand." {
 		t.Errorf("Output should be 'No melds in hand'. Instead got: %s", melds.PrettyPrintMelds())
 	}
+}
+
+func TestCheckUnmeldedCards(t *testing.T) {
+	hand := Hand{
+		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
+		{3, "Clubs", "3"},
+	}
+
+	unmelds := hand.CheckUnmeldedCards()
+
+	if reflect.DeepEqual(unmelds, []Unmelded{{
+		{3, "Spades", "3"}, {4, "Hearts", "4"}, {7, "Hearts", "7"},
+		{12, "Spades", "Q"}},
+	}) {
+		t.Error("Did not get the unmelded cards for the best meld.")
+	}
+	return
+}
+
+func TestCheckTotal(t *testing.T) {
+	hand := Hand{
+		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
+		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
+		{3, "Spades", "3"}, {4, "Diamonds", "4"}, {7, "Hearts", "7"},
+		{3, "Clubs", "3"},
+	}
+
+	total := hand.CheckTotal()
+	if total != 26 {
+		t.Errorf("The total should be 26. Instead, we got: %d", total)
+	}
+	return
 }
