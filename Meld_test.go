@@ -82,7 +82,7 @@ func TestPrettyPrintMeld(t *testing.T) {
 	}
 
 	meld := hand.CheckMelds()
-	if meld.PrettyPrintMelds() != "Meld 1: AC 2C 3C 2D 3D 4D \nMeld 2: 3C 3D 3S \n" {
+	if meld.PrettyPrintMelds() != "Meld 1: AC 2C 3C 2D 3D 4D \nMeld 2: 3C 3D 3S " {
 		t.Error("Output for pretty print did not appear as expected.")
 	}
 	return

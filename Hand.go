@@ -68,29 +68,32 @@ func (h *Hand) String() string {
 
 // DrawCard by popping a card from a pickupable and appending it to a player's
 // hand.
-func (h *Hand) DrawCard(p PickUpAble) (err error) {
+func (h *Hand) DrawCard(p PickUpAble) (card Card, err error) {
 	if len(*h) >= 11 {
-		return fmt.Errorf("cannot have a hand size more than 11")
+		err = fmt.Errorf("cannot have a hand size more than 11")
+		return
 	}
 
 	if p.IsEmpty() {
-		return fmt.Errorf("%T has no more cards", p)
+		err = fmt.Errorf("%T has no more cards", p)
+		return
 	}
 
-	*h = append(*h, p.DrawCard())
+	card = p.DrawCard()
+	*h = append(*h, card)
 	return
 }
 
 // DiscardCard - places a card on top of the stack.
-func (h *Hand) DiscardCard(card Card, stack *Stack) (err error) {
+func (h *Hand) DiscardCard(card Card, stack *Stack) (Card, error) {
 	for i, v := range *h {
 		if card == v {
 			*h = append((*h)[:i], (*h)[i+1:]...)
 			*stack = append((*stack), card)
-			return
+			return card, nil
 		}
 	}
-	return fmt.Errorf("could not find card in hand")
+	return card, fmt.Errorf("could not find this card in hand")
 }
 
 // ContainsCard - checks and sees if the card is in the player's hand.

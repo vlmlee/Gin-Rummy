@@ -58,15 +58,20 @@ func GetCardFromPrettyPrint(p string) (card Card, err error) {
 	var suit string
 	var value int
 
+	if len(p) < 2 {
+		err = fmt.Errorf("unidentifed card. Try again")
+		return
+	}
+
 	if p[:2] == "10" {
 		suit, err = GetCardSuit(p[2:])
 		if err != nil {
-			err = fmt.Errorf("unidentified card suit")
+			err = fmt.Errorf("unidentified card suit. Try again")
 		}
 
 		value, err = GetCardValue(p[:2])
 		if err != nil {
-			err = fmt.Errorf("could not get the value of this card")
+			err = fmt.Errorf("could not get the value of this card. Try again")
 		}
 
 		card = GetCardWithRank(value, suit)
@@ -92,7 +97,7 @@ func GetCardSuit(s string) (suit string, err error) {
 	case "S":
 		suit = "Spades"
 	default:
-		return suit, fmt.Errorf("unidentified card suit")
+		return suit, fmt.Errorf("unidentified card suit. Try again")
 	}
 	return
 }

@@ -35,7 +35,7 @@ func TestStackTopCard(t *testing.T) {
 		t.Error("Stack did not notify player that it is empty.")
 	}
 
-	err := h.DrawCard(&stack)
+	_, err := h.DrawCard(&stack)
 	if err == nil {
 		t.Error("Stack did not throw error when we tried to draw from an empty stack.")
 	}

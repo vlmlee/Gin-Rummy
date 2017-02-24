@@ -15,7 +15,7 @@ func TestMaxHandSizeIsEqualToEleven(t *testing.T) {
 		t.Error("Hand size is not 11.")
 	}
 
-	err := hand.DrawCard(&deck)
+	_, err := hand.DrawCard(&deck)
 	if err == nil {
 		t.Error("Did not throw error when hand size became more than 11.")
 	}

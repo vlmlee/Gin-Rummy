@@ -87,10 +87,12 @@ TURN_ACTIONS:
 		response = strings.ToUpper(strings.TrimSpace(response))
 		switch response {
 		case "1", "DRAW CARD":
-			p.Hand.DrawCard(deck)
+			card, _ := p.Hand.DrawCard(deck)
+			fmt.Printf("\n%s drew %s.", p.name, card.PrettyPrintCard())
 			break TURN_ACTIONS
 		case "2", "PICKUP CARD FROM STACK":
-			p.Hand.DrawCard(stack)
+			card, _ := p.Hand.DrawCard(stack)
+			fmt.Printf("\n%s drew %s.", p.name, card.PrettyPrintCard())
 			break TURN_ACTIONS
 		case "3", "CHECK MELDS":
 			melds := p.Hand.CheckMelds()
@@ -132,17 +134,18 @@ TURN_ACTIONS:
 
 		discard, err := reader.ReadString('\n')
 		if err != nil {
-			fmt.Println("Something went wrong. Try again.")
+			fmt.Println("Something went wrong. Try discarding a different card.")
 			continue
 		}
 
 		discard = strings.ToUpper(strings.TrimRight(discard, "\n"))
 		card, err := GetCardFromPrettyPrint(discard)
 		if err != nil {
-			fmt.Println("Something went wrong. Try again.")
+			fmt.Println("Something went wrong. Try discarding a different card.")
 			continue
 		}
 		p.Hand.DiscardCard(card, stack)
+		fmt.Printf("\n%s discarded %s\n", p.name, discard)
 		break
 	}
 	return
