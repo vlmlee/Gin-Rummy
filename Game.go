@@ -90,7 +90,7 @@ TURN_ACTIONS:
 			card, _ := p.Hand.DrawCard(deck)
 			fmt.Printf("\n%s drew %s.", p.name, card.PrettyPrintCard())
 			break TURN_ACTIONS
-		case "2", "PICKUP CARD FROM STACK":
+		case "2", "PICKUP CARD":
 			card, _ := p.Hand.DrawCard(stack)
 			fmt.Printf("\n%s drew %s.", p.name, card.PrettyPrintCard())
 			break TURN_ACTIONS

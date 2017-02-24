@@ -17,9 +17,14 @@ $ ./Rummy
 
 The game format is the same as traditional Gin Rummy.
 
-Cards are pretty printed in the format: `RANK-SUIT`. For example, `AH` means `Ace of Hearts`, `KS` is the `King of Spades`.
+Cards are pretty printed in the format: `RANK-SUIT`. For example, `AH` means `Ace of Hearts`, `KS` is the `King of Spades`. Each turn, the player will be prompt with 4 options:
 
-The player will always goes first and there will be a message that logs what each player does during their turn.
+1. DRAW CARD FROM DECK
+2. PICKUP CARD FROM STACK
+3. CHECK MELDS IN HAND
+4. CHECK POINTS IN HAND
+
+You can then choose your actions by entering 1, 2, 3, or 4. The player will always goes first and there will be a message that logs what each player does during their turn.
 
 ### Some slight differences from regular Gin Rummy:
 
