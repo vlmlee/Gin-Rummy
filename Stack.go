@@ -25,3 +25,11 @@ func (s *Stack) PeekAtStack() (card string) {
 	}
 	return (*s)[len(*s)-1].PrettyPrintCard()
 }
+
+// IsEmpty - checks if the stack is empty.
+func (s *Stack) IsEmpty() bool {
+	if len(*s) == 0 {
+		return true
+	}
+	return false
+}

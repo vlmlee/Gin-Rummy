@@ -43,3 +43,11 @@ func (d *Deck) DrawCard() (card Card) {
 	*d = (*d)[:len(*d)-1]
 	return
 }
+
+// IsEmpty - checks if deck is empty.
+func (d *Deck) IsEmpty() bool {
+	if len(*d) == 0 {
+		return true
+	}
+	return false
+}
