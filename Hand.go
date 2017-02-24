@@ -97,8 +97,8 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (Card, error) {
 }
 
 // ContainsCard - checks and sees if the card is in the player's hand.
-func (h Hand) ContainsCard(card Card) bool {
-	for _, cardInHand := range h {
+func (h *Hand) ContainsCard(card Card) bool {
+	for _, cardInHand := range *h {
 		if cardInHand == card {
 			return true
 		}

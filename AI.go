@@ -55,12 +55,17 @@ func (u *Deadwood) ChooseCardToDiscard() Card {
 
 // AIActions - describes what the AI is going to do.
 func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin *bool) {
+	total := p.Hand.CheckTotal()
+
 	if len(*deck) == 0 {
 		*draw = true
 		return
 	}
 
 	if p.Hand.CheckTotal() <= 10 {
+		if total == 0 {
+			*gin = true
+		}
 		*knock = true
 		fmt.Printf("\nAI knocks!\n")
 		return
@@ -94,6 +99,11 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin
 		// If the card on the stack is worse than our worse card, then draw
 		// from the deck.
 		if umeldedCardsWithoutDraw.CardDistance(cardFromTopOfStack) > umeldedCardsWithoutDraw.CardDistance(deadWoodToDiscard) {
+			p.Hand.DrawCard(deck)
+			fmt.Printf("\nAI drew from the deck!\n")
+			// Or if the card on the stack will become one of our deadwood
+			// cards, we then draw from the deck.
+		} else if leftOverCards.ContainsCard(cardFromTopOfStack) {
 			p.Hand.DrawCard(deck)
 			fmt.Printf("\nAI drew from the deck!\n")
 		} else {
