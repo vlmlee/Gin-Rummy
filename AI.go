@@ -91,6 +91,9 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin
 		} else if cardToDiscard.value < cardFromTopOfStack.value {
 			p.Hand.DrawCard(deck)
 			fmt.Printf("\nAI drew from the deck!\n")
+		} else if leftOverCards.ContainsCard(cardFromTopOfStack) {
+			p.Hand.DrawCard(deck)
+			fmt.Printf("\nAI drew from the deck!\n")
 		} else {
 			p.Hand.DrawCard(stack)
 			fmt.Printf("\nAI drew from the stack!\n")

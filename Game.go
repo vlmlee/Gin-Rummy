@@ -120,7 +120,7 @@ TURN_ACTIONS:
 
 			fmt.Printf("\nYou hand total is: %d", total)
 		default:
-			fmt.Printf("\nUnrecognized command. Try again.\n\n")
+			fmt.Printf("\nUnrecognized command. Please pick one of the four options. To knock, check your score first and see if it's under 10.\n\n")
 		}
 	}
 
