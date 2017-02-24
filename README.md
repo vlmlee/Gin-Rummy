@@ -17,7 +17,7 @@ $ ./Rummy
 
 The game format is the same as traditional Gin Rummy.
 
-Cards are pretty printed in the format: `RANK-SUIT`. For example, `AH` means `Ace of Hearts`, `KS` is the `King of Spades`. Each turn, the player will be prompt with 4 options:
+Cards are pretty printed in the format: `RANK-SUIT`. For example, `AH` means `Ace of Hearts`, `KS` is the `King of Spades`. Each turn, the player will be prompt with four options:
 
 ```
 1. DRAW CARD FROM DECK
@@ -34,9 +34,9 @@ To knock, check to see if the number of points in your hand is less than or equa
 
 1. Jacks have values of 11, Queens 12, and Kings 13.
 
-2. Knocking with 0 points will net 20 extra points.
+2. Knocking with zero points will net 20 extra points.
 
-3. There is no big or small gin.
+3. There is no big and small gin.
 
 4. There is also no score you need to reach to complete the game. It will go on forever until you choose to not start a new game.
 
