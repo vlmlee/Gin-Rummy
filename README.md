@@ -42,6 +42,6 @@ To knock, check to see if the number of points in your hand is less than or equa
 
 ### The Dumb AI
 
-The game has an AI that plays *greedily*. It's pretty simple and only seeks to knock first without memorizing any of the cards it has seen. So that means it looks for cards that it can meld and ignores cards that will make the hand worse. The AI will pick up cards from the stack that can pair with a card in its hand as long as it makes the hand *better*. Else, it will draw from the deck. If the card on top of the stack makes a meld, it will draw from the stack.
+The game has an AI that plays *greedily*. It's pretty simple and only seeks to knock first without memorizing any of the cards it has seen. So that means it looks for cards that it can meld and ignores most cards on the stack and draw from the deck. The AI will pick up cards from the stack that can pair with a card in its hand as long as it makes the hand *better*. Otherwise, it will draw from the deck. If the card on top of the stack makes a meld, it will draw from the stack.
 
 ## License: MIT
