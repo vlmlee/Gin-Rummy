@@ -58,21 +58,31 @@ func GetCardFromPrettyPrint(p string) (card Card, err error) {
 	var suit string
 	var value int
 
-	s := strings.Split(p, "")
-	switch s[0] {
-	case "A":
-		value = 1
-	case "J":
-		value = 11
-	case "Q":
-		value = 12
-	case "K":
-		value = 13
-	default:
-		value, err = strconv.Atoi(s[0])
+	if p[:2] == "10" {
+		suit, err = GetCardSuit(p[2:])
+		if err != nil {
+			err = fmt.Errorf("unidentified card suit")
+		}
+
+		value, err = GetCardValue(p[:2])
+		if err != nil {
+			err = fmt.Errorf("could not get the value of this card")
+		}
+
+		card = GetCardWithRank(value, suit)
+		return
 	}
 
-	switch s[1] {
+	s := strings.Split(p, "")
+	value, err = GetCardValue(s[0])
+	suit, err = GetCardSuit(s[1])
+	card = GetCardWithRank(value, suit)
+	return
+}
+
+// GetCardSuit - gets the card's suit from the pretty printed string.
+func GetCardSuit(s string) (suit string, err error) {
+	switch s {
 	case "C":
 		suit = "Clubs"
 	case "D":
@@ -82,9 +92,27 @@ func GetCardFromPrettyPrint(p string) (card Card, err error) {
 	case "S":
 		suit = "Spades"
 	default:
-		return card, fmt.Errorf("unidentified card suit")
+		return suit, fmt.Errorf("unidentified card suit")
 	}
+	return
+}
 
-	card = GetCardWithRank(value, suit)
+// GetCardValue - gets the card's value from the pretty printed string.
+func GetCardValue(s string) (value int, err error) {
+	switch s {
+	case "A":
+		value = 1
+	case "J":
+		value = 11
+	case "Q":
+		value = 12
+	case "K":
+		value = 13
+	case "10":
+		value = 10
+	default:
+		value, err = strconv.Atoi(s)
+		return value, err
+	}
 	return
 }

@@ -20,12 +20,18 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	// While Knock is true, keep the players in a loop that handle turns.
 	for knock := true; knock; {
 		if turn == p1 {
-			TurnActions(p1, &RummyDeck, &RummyStack, &knock)
+			PlayerActions(p1, &RummyDeck, &RummyStack, &knock)
 			turn = p2
 		} else {
-			TurnActions(p2, &RummyDeck, &RummyStack, &knock)
+			AIActions(p2, &RummyDeck, &RummyStack, &knock)
 			turn = p1
 		}
+	}
+
+	if turn == p1 {
+		*pScore = CalculateScore(&p1.Hand, &p2.Hand)
+	} else {
+		*AIScore = CalculateScore(&p2.Hand, &p1.Hand)
 	}
 
 	fmt.Printf("Player score: %d AI score: %d \n Play again? (Y/N)", pScore, AIScore)
@@ -40,8 +46,8 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	return
 }
 
-// TurnActions - describes what the player is going to do.
-func TurnActions(p *Player, deck *Deck, stack *Stack, knock *bool) {
+// PlayerActions - describes what the player is going to do.
+func PlayerActions(p *Player, deck *Deck, stack *Stack, knock *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
 TURN_ACTIONS:
@@ -69,7 +75,7 @@ TURN_ACTIONS:
 			// Check the total of points in your hand, values not melded
 			total := p.Hand.CheckTotal()
 			if total <= 10 {
-				fmt.Printf("Your hand total is: %d. Will you knock? (Y/N)", total)
+				fmt.Printf("\nYour hand total is: %d. Will you knock? (Y/N)", total)
 				response, err := reader.ReadString('\n')
 
 				if err != nil {
@@ -77,37 +83,43 @@ TURN_ACTIONS:
 				}
 
 				if response == "Y" {
-					// CalculateScore()
+					*knock = false
+					return
 				}
 			}
 
-			fmt.Println("You hand total is: ", total)
-			break TURN_ACTIONS
+			fmt.Printf("\nYou hand total is: %d", total)
 		default:
 			fmt.Printf("\nUnrecognized command. Try again.\n\n")
 		}
 	}
 
-	fmt.Println("You must now discard a card from your hand.")
+	fmt.Printf("\nYou must now discard a card from your hand.\n\nCard on stack: %s \nYour hand: %s \n", stack.PeekAtStack(), p.PrettyPrintHand())
 
-	// Pretty print hand
+	discard, err := reader.ReadString('\n')
+	if err != nil {
+		fmt.Println("Something went wrong")
+	}
 
-	// discard := reader.ReadString('\n')
+	discard = strings.ToUpper(strings.TrimRight(discard, "\n"))
+	card, err := GetCardFromPrettyPrint(discard)
+	if err != nil {
+		fmt.Println("Something went wrong.")
+	}
 
-	// DiscardCardFromHand(discard)
+	p.Hand.DiscardCard(card, stack)
+	return
+}
 
-	// Pass turn to other player
+// CalculateScore - gets the score from the last round.
+func CalculateScore(h1, h2 *Hand) (score int) {
+	return h1.CheckTotal() - h2.CheckTotal()
 }
 
 // Log will log the details of each turn, that is, what actions the player and
 // the AI took, top card on the stack.
 func Log(p *Player, action string) {
 
-}
-
-// Knock ends the game and calculates the number of points the knocking player // has won or lost. AI and player will show hands here.
-func Knock() bool {
-	return true
 }
 
 func main() {

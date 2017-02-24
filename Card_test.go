@@ -58,3 +58,38 @@ func TestGetCardFromPrettyPrint(t *testing.T) {
 	}
 	return
 }
+
+func TestCardSuit(t *testing.T) {
+	suits := map[string]string{
+		"C": "Clubs",
+		"D": "Diamonds",
+		"H": "Hearts",
+		"S": "Spades",
+	}
+
+	for key, suit := range suits {
+		s, _ := GetCardSuit(key)
+		if s != suit {
+			t.Errorf("Expected %s but got %s", suit, s)
+		}
+	}
+	return
+}
+
+func TestCardValue(t *testing.T) {
+	values := map[string]int{
+		"A":  1,
+		"K":  13,
+		"Q":  12,
+		"J":  11,
+		"10": 10,
+	}
+
+	for key, value := range values {
+		v, _ := GetCardValue(key)
+		if v != value {
+			t.Errorf("Expected %d but got %d", value, v)
+		}
+	}
+	return
+}
