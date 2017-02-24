@@ -28,6 +28,8 @@ Cards are pretty printed in the format: `RANK-SUIT`. For example, `AH` means `Ac
 
 You can then choose your actions by entering 1, 2, 3, or 4. The player will always goes first and there will be a message that logs what each player does during their turn.
 
+To knock, check to see if the number of points in your hand is less than or equal to 10 and then knock by typing `Y` when you get prompted. You will not get prompted if the points in your hands are greater than 10.
+
 ### Some slight differences from regular Gin Rummy:
 
 1. Jacks have values of 11, Queens 12, and Kings 13.
