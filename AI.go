@@ -19,3 +19,8 @@ func IsNearestNeighbor() {
 func ChooseCardToDiscard() {
 
 }
+
+// AIActions - describes what the AI is going to do.
+func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
+	return
+}

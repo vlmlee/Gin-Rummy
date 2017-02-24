@@ -77,7 +77,9 @@ func (m Melds) PrettyPrintMelds() (melds string) {
 				melds += k.rank + k.suit[:1] + " "
 			}
 		}
-		melds += "\n"
+		if index != len(m)-1 {
+			melds += "\n"
+		}
 	}
 	return
 }
