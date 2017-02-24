@@ -13,7 +13,7 @@ type Protomeld []Card
 type Unmelded []Card
 
 // Meld - Rummy standard melds. Must be at least three sequential cards of the
-// same suit (ex. 2H-3H-4H) or at least three cards of same rank.
+// same suit called a run (ex. 2H-3H-4H) or at least three cards of same rank called a set.
 type Meld [][]Card
 
 // Melds - array of possible configuration of melds in a player's hand.
