@@ -20,5 +20,8 @@ func (s *Stack) DrawCard() (card Card) {
 
 // PeekAtStack - reveals the top card on the stack.
 func (s *Stack) PeekAtStack() (card string) {
+	if len(*s) == 0 {
+		return "No cards in the stack."
+	}
 	return (*s)[len(*s)-1].PrettyPrintCard()
 }
