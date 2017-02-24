@@ -68,7 +68,7 @@ func (h *Hand) String() string {
 
 // DrawCard by popping a card from a pickupable and appending it to a player's
 // hand.
-func (h *Hand) DrawCard(p PickUpAble) (card Card, err error) {
+func (h *Hand) DrawCard(p PickUpAble) (cardDrawn Card, err error) {
 	if len(*h) >= 11 {
 		err = fmt.Errorf("cannot have a hand size more than 11")
 		return
@@ -79,15 +79,15 @@ func (h *Hand) DrawCard(p PickUpAble) (card Card, err error) {
 		return
 	}
 
-	card = p.DrawCard()
-	*h = append(*h, card)
+	cardDrawn = p.DrawCard()
+	*h = append(*h, cardDrawn)
 	return
 }
 
 // DiscardCard - places a card on top of the stack.
 func (h *Hand) DiscardCard(card Card, stack *Stack) (Card, error) {
-	for i, v := range *h {
-		if card == v {
+	for i, cardInHand := range *h {
+		if card == cardInHand {
 			*h = append((*h)[:i], (*h)[i+1:]...)
 			*stack = append((*stack), card)
 			return card, nil
@@ -98,8 +98,8 @@ func (h *Hand) DiscardCard(card Card, stack *Stack) (Card, error) {
 
 // ContainsCard - checks and sees if the card is in the player's hand.
 func (h Hand) ContainsCard(card Card) bool {
-	for _, c := range h {
-		if c == card {
+	for _, cardInHand := range h {
+		if cardInHand == card {
 			return true
 		}
 	}
@@ -109,8 +109,8 @@ func (h Hand) ContainsCard(card Card) bool {
 // CheckTotal - checks the total number of points in a player's hand. It must be
 // less than 10 to knock.
 func (h *Hand) CheckTotal() (total int) {
-	cards := h.CheckUnmeldedCards()
-	for _, card := range cards {
+	cardsInDeadwood := h.CheckDeadwood()
+	for _, card := range cardsInDeadwood {
 		total += card.value
 	}
 	return

@@ -27,7 +27,7 @@ func (h *Hand) CheckIfCardIsNearestNeighbor(c Card) bool {
 
 // CardDistance - gives us the relative likelihood of the card being useful in
 // our hand based on how far away it is from all the other cards in our hand.
-func (u *Unmelded) CardDistance(c Card) int {
+func (u *Deadwood) CardDistance(c Card) int {
 	distance := 0.0
 	for _, card := range *u {
 		distance += math.Abs(float64(card.value) - float64(c.value))
@@ -41,7 +41,7 @@ func (u *Unmelded) CardDistance(c Card) int {
 // the chances to do so. Saving slots for nearest neighbors in hopes of drawing
 // the right card is not good unless we have an idea of what cards are going to
 // appear. We could implement that in the future.
-func (u *Unmelded) ChooseCardToDiscard() Card {
+func (u *Deadwood) ChooseCardToDiscard() Card {
 	cardToDiscard := Card{}
 	max := 0
 	for _, card := range *u {
@@ -71,9 +71,9 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
 	cardFromTopOfStack, _ := GetCardFromPrettyPrint(stack.PeekAtStack())
 	fauxHand = append(fauxHand, p.Hand...)
 	fauxHand = append(fauxHand, cardFromTopOfStack)
-	leftOverCards := fauxHand.CheckUnmeldedCards()
+	leftOverCards := fauxHand.CheckDeadwood()
 	cardToDiscard := leftOverCards.ChooseCardToDiscard()
-	umeldedCardsWithoutDraw := p.Hand.CheckUnmeldedCards()
+	umeldedCardsWithoutDraw := p.Hand.CheckDeadwood()
 
 	// Nearest neighbor strategy
 	nearestNeighbor := p.Hand.CheckIfCardIsNearestNeighbor(cardFromTopOfStack)
@@ -101,7 +101,7 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
 		}
 	}
 
-	remainingCards := p.Hand.CheckUnmeldedCards()
+	remainingCards := p.Hand.CheckDeadwood()
 	discardedCard, _ := p.Hand.DiscardCard(remainingCards.ChooseCardToDiscard(), stack)
 	fmt.Printf("%s discarded %s\n", p.name, discardedCard.PrettyPrintCard())
 	return

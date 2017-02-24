@@ -102,7 +102,7 @@ func TestPrettyPrintMeldNoMelds(t *testing.T) {
 	}
 }
 
-func TestCheckUnmeldedCards(t *testing.T) {
+func TestCheckDeadwood(t *testing.T) {
 	hand := Hand{
 		{2, "Clubs", "2"}, {2, "Diamonds", "2"}, {1, "Clubs", "A"},
 		{4, "Hearts", "4"}, {3, "Diamonds", "3"}, {12, "Spades", "Q"},
@@ -110,9 +110,9 @@ func TestCheckUnmeldedCards(t *testing.T) {
 		{3, "Clubs", "3"},
 	}
 
-	unmelds := hand.CheckUnmeldedCards()
+	unmelds := hand.CheckDeadwood()
 
-	if reflect.DeepEqual(unmelds, []Unmelded{{
+	if reflect.DeepEqual(unmelds, []Deadwood{{
 		{3, "Spades", "3"}, {4, "Hearts", "4"}, {7, "Hearts", "7"},
 		{12, "Spades", "Q"}},
 	}) {

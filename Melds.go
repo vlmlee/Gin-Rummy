@@ -9,8 +9,8 @@ import (
 // Protomeld - not quite a full meld, but container for candidate melds.
 type Protomeld []Card
 
-// Unmelded - cards that are not in a meld.
-type Unmelded []Card
+// Deadwood - cards that are not in a meld.
+type Deadwood []Card
 
 // Meld - Rummy standard melds. Must be at least three sequential cards of the
 // same suit called a run (ex. 2H-3H-4H) or at least three cards of same rank called a set.
@@ -20,25 +20,25 @@ type Meld [][]Card
 type Melds [][][]Card
 
 // ContainsCard - checks and sees if the card is in the unmelded set.
-func (u Unmelded) ContainsCard(card Card) bool {
-	for _, c := range u {
-		if c == card {
+func (d Deadwood) ContainsCard(card Card) bool {
+	for _, cardInDeadwood := range d {
+		if cardInDeadwood == card {
 			return true
 		}
 	}
 	return false
 }
 
-// CheckUnmeldedCards - returns cards not in a meld configuration.
-func (h *Hand) CheckUnmeldedCards() (unmelded Unmelded) {
+// CheckDeadwood - returns cards not in a meld configuration.
+func (h *Hand) CheckDeadwood() (unmelded Deadwood) {
 	meldConfig := h.CheckMelds()
-SEARCH_UNMELDED_CARDS:
+SEARCH_DEADWOOD:
 	for _, cardInHand := range *h {
 		for _, melds := range meldConfig {
 			for _, meld := range melds {
 				for _, cardInMeld := range meld {
 					if cardInHand == cardInMeld {
-						continue SEARCH_UNMELDED_CARDS
+						continue SEARCH_DEADWOOD
 					}
 				}
 			}
@@ -85,7 +85,8 @@ func (m Melds) PrettyPrintMelds() (melds string) {
 }
 
 // SubsetOfMeld - checks if a meld being made is a subset of a previous meld
-// made. Ex. 2C 3C 4C is a subset of 2C 3C 4C 5C 6C.
+// made. Ex. 2C 3C 4C is a subset of 2C 3C 4C 5C 6C. This is a fixed length
+// linear search.
 func (m Protomeld) SubsetOfMeld(melds Meld) bool {
 	for _, ms := range melds {
 		for i := 0; i+len(m) <= len(ms); i++ {
