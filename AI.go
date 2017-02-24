@@ -54,7 +54,7 @@ func (u *Deadwood) ChooseCardToDiscard() Card {
 }
 
 // AIActions - describes what the AI is going to do.
-func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
+func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin *bool) {
 	if len(*deck) == 0 {
 		*draw = true
 		return
@@ -74,6 +74,7 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
 	leftOverCards := fauxHand.CheckDeadwood()
 	cardToDiscard := leftOverCards.ChooseCardToDiscard()
 	umeldedCardsWithoutDraw := p.Hand.CheckDeadwood()
+	deadWoodToDiscard := umeldedCardsWithoutDraw.ChooseCardToDiscard()
 
 	// Nearest neighbor strategy
 	nearestNeighbor := p.Hand.CheckIfCardIsNearestNeighbor(cardFromTopOfStack)
@@ -92,7 +93,7 @@ func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
 	} else {
 		// If the card on the stack is worse than our worse card, then draw
 		// from the deck.
-		if umeldedCardsWithoutDraw.CardDistance(cardFromTopOfStack) > umeldedCardsWithoutDraw.CardDistance(cardToDiscard) {
+		if umeldedCardsWithoutDraw.CardDistance(cardFromTopOfStack) > umeldedCardsWithoutDraw.CardDistance(deadWoodToDiscard) {
 			p.Hand.DrawCard(deck)
 			fmt.Printf("\nAI drew from the deck!\n")
 		} else {

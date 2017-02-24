@@ -16,18 +16,18 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	RummyDeck := InitializeDeck()
 	RummyStack := RummyDeck.InitializeStack()
 	RummyDeck.Deal(p1, p2)
-	knock, draw := false, false
+	knock, draw, gin := false, false, false
 
 	// While Knock is true, keep the players in a loop that handle turns.
 	for {
 		if turn == p1 {
-			PlayerActions(p1, &RummyDeck, &RummyStack, &knock, &draw)
+			PlayerActions(p1, &RummyDeck, &RummyStack, &knock, &draw, &gin)
 			if knock || draw {
 				break
 			}
 			turn = p2
 		} else {
-			AIActions(p2, &RummyDeck, &RummyStack, &knock, &draw)
+			AIActions(p2, &RummyDeck, &RummyStack, &knock, &draw, &gin)
 			if knock || draw {
 				break
 			}
@@ -48,9 +48,9 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	}
 
 	if turn == p1 {
-		*pScore = CalculateScore(&p1.Hand, &p2.Hand)
+		*pScore = CalculateScore(&p1.Hand, &p2.Hand, gin)
 	} else {
-		*AIScore = CalculateScore(&p2.Hand, &p1.Hand)
+		*AIScore = CalculateScore(&p2.Hand, &p1.Hand, gin)
 	}
 
 	fmt.Printf("%s score: %d AI score: %d \nPlay again? (Y/N)", *name, *pScore, *AIScore)
@@ -67,7 +67,7 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 }
 
 // PlayerActions - describes what the player is going to do.
-func PlayerActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool) {
+func PlayerActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
 TURN_ACTIONS:
@@ -110,6 +110,9 @@ TURN_ACTIONS:
 				}
 
 				if response == "Y" {
+					if total == 0 {
+						*gin = true
+					}
 					*knock = true
 					break TURN_ACTIONS
 				}
@@ -152,7 +155,10 @@ TURN_ACTIONS:
 }
 
 // CalculateScore - gets the score from the last round.
-func CalculateScore(h1, h2 *Hand) (score int) {
+func CalculateScore(h1, h2 *Hand, gin bool) (score int) {
+	if gin {
+		return h2.CheckTotal() - h1.CheckTotal() + 20
+	}
 	return h2.CheckTotal() - h1.CheckTotal()
 }
 
