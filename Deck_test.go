@@ -96,7 +96,14 @@ func TestDeckDealsTenCardsToPlayers(t *testing.T) {
 	return
 }
 
-// Checks for duplicate objects in a array that have Card types.
+func TestDeckIsEmpty(t *testing.T) {
+	deck := Deck{}
+	if !deck.IsEmpty() {
+		t.Error("Deck should be empty but is not.")
+	}
+}
+
+// Checks for duplicate objects in an array that have Card types.
 func CheckDups(arr []Card) bool {
 	dups := map[Card]bool{}
 	for _, card := range arr {

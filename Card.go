@@ -18,7 +18,7 @@ type Card struct {
 func CreateDeckOfCards() (deck Deck) {
 	suits := []string{"Clubs", "Diamonds", "Hearts", "Spades"}
 	values := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13}
-	deck = make([]Card, 0)
+	deck = make(Deck, 0)
 	for _, suit := range suits {
 		for _, value := range values {
 			deck = append(deck, GetCardWithRank(value, suit))

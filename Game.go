@@ -17,14 +17,13 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	RummyStack := RummyDeck.InitializeStack()
 	RummyDeck.Deal(p1, p2)
 
-	// While Knock is false, keep the players in a loop that handle turns.
-	// We can set v := false
-	for v := Knock(); v; {
+	// While Knock is true, keep the players in a loop that handle turns.
+	for knock := true; knock; {
 		if turn == p1 {
-			Action(p1, &RummyDeck, &RummyStack, &v)
+			TurnActions(p1, &RummyDeck, &RummyStack, &knock)
 			turn = p2
 		} else {
-			Action(p2, &RummyDeck, &RummyStack, &v)
+			TurnActions(p2, &RummyDeck, &RummyStack, &knock)
 			turn = p1
 		}
 	}
@@ -41,11 +40,11 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	return
 }
 
-// Action describes what the player is going to do.
-func Action(p *Player, deck *Deck, stack *Stack, knock *bool) {
+// TurnActions - describes what the player is going to do.
+func TurnActions(p *Player, deck *Deck, stack *Stack, knock *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
-ACTIONS:
+TURN_ACTIONS:
 	for {
 		fmt.Printf("Card on stack: %s \nYour hand: %s \n", stack.PeekAtStack(), p.PrettyPrintHand())
 		fmt.Printf("\nWhat would you like to do, %s?\n 1. DRAW CARD\n 2. PICKUP CARD FROM STACK\n 3. CHECK MELDS\n 4. CHECK POINTS\n", p.name)
@@ -59,21 +58,37 @@ ACTIONS:
 		switch response {
 		case "1", "DRAW CARD":
 			p.Hand.DrawCard(deck)
-			break ACTIONS
+			break TURN_ACTIONS
 		case "2", "PICKUP CARD FROM STACK":
 			p.Hand.DrawCard(stack)
-			break ACTIONS
+			break TURN_ACTIONS
 		case "3", "CHECK MELDS":
 			melds := p.Hand.CheckMelds()
 			fmt.Printf("\n%s\n", melds.PrettyPrintMelds())
 		case "4", "CHECK POINTS":
 			// Check the total of points in your hand, values not melded
+			total := p.Hand.CheckTotal()
+			if total <= 10 {
+				fmt.Printf("Your hand total is: %d. Will you knock? (Y/N)", total)
+				response, err := reader.ReadString('\n')
+
+				if err != nil {
+					fmt.Println("Something went wrong...")
+				}
+
+				if response == "Y" {
+					// CalculateScore()
+				}
+			}
+
+			fmt.Println("You hand total is: ", total)
+			break TURN_ACTIONS
 		default:
 			fmt.Printf("\nUnrecognized command. Try again.\n\n")
 		}
 	}
 
-	fmt.Println("Now, you must discard a card from your hand.")
+	fmt.Println("You must now discard a card from your hand.")
 
 	// Pretty print hand
 
