@@ -16,8 +16,8 @@ import "math"
 // a nearest neighbor.
 func (h *Hand) CheckIfCardIsNearestNeighbor(c Card) bool {
 	for _, card := range *h {
-		if c.value == card.value+1 ||
-			c.value == card.value-1 ||
+		if (c.value == card.value+1 && c.suit == card.suit) ||
+			(c.value == card.value-1 && c.suit == card.suit) ||
 			c.value == card.value {
 			return true
 		}
