@@ -14,10 +14,10 @@ type Deadwood []Card
 
 // Meld - Rummy standard melds. Must be at least three sequential cards of the
 // same suit called a run (ex. 2H-3H-4H) or at least three cards of same rank called a set.
-type Meld [][]Card
+type Meld []Protomeld
 
 // Melds - array of possible configuration of melds in a player's hand.
-type Melds [][][]Card
+type Melds []Meld
 
 // ContainsCard - checks and sees if the card is in the unmelded set.
 func (d Deadwood) ContainsCard(card Card) bool {

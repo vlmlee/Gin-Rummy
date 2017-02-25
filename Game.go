@@ -48,22 +48,22 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	}
 
 	if turn == p1 {
-		*pScore = CalculateScore(&p1.Hand, &p2.Hand, gin)
+		*pScore += CalculateScore(&p1.Hand, &p2.Hand, gin)
 	} else {
-		*AIScore = CalculateScore(&p2.Hand, &p1.Hand, gin)
+		*AIScore += CalculateScore(&p2.Hand, &p1.Hand, gin)
 	}
 
-	fmt.Printf("%s score: %d AI score: %d \nPlay again? (Y/N)", *name, *pScore, *AIScore)
+	fmt.Printf("\n%s's score: %d AI score: %d \nPlay again? (Y/N) ", *name, *pScore, *AIScore)
 	reader := bufio.NewReader(os.Stdin)
 	response, err := reader.ReadString('\n')
 	response = strings.ToUpper(strings.TrimSpace(response))
 
 	if response == "Y" {
 		StartNewGame(name, pScore, AIScore)
+	} else {
+		fmt.Printf("\nGoodbye!\n\nFinal scores:\n%s: %d\nAI: %d", *name, *pScore, *AIScore)
 	}
-	fmt.Printf("Goodbye!\nFinal scores:\n%s: %d\nAI: %d", *name, *pScore, *AIScore)
 	return err
-
 }
 
 // PlayerActions - describes what the player is going to do.
