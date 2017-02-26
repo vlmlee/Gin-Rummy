@@ -36,7 +36,7 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 	}
 
 	if draw {
-		fmt.Printf("The game was a draw!\n---\n%s score: %d AI score: %d \n Play again? (Y/N)", *name, *pScore, *AIScore)
+		fmt.Printf("\nThe game was a draw!\n---\n%s score: %d AI score: %d \n Play again? (Y/N) ", *name, *pScore, *AIScore)
 		reader := bufio.NewReader(os.Stdin)
 		response, err := reader.ReadString('\n')
 		response = strings.ToUpper(strings.TrimSpace(response))
