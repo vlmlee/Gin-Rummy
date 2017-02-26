@@ -54,7 +54,7 @@ func (u *Deadwood) ChooseCardToDiscard() Card {
 }
 
 // AIActions - describes what the AI is going to do.
-func AIActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin *bool) {
+func AIActions(p *Player, deck *Deck, stack *Stack, knock, draw, gin *bool) {
 	total := p.Hand.CheckTotal()
 
 	if len(*deck) == 0 {

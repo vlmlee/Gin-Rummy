@@ -67,7 +67,7 @@ func StartNewGame(name *string, pScore, AIScore *int) (err error) {
 }
 
 // PlayerActions - describes what the player is going to do.
-func PlayerActions(p *Player, deck *Deck, stack *Stack, knock *bool, draw *bool, gin *bool) {
+func PlayerActions(p *Player, deck *Deck, stack *Stack, knock, draw, gin *bool) {
 	reader := bufio.NewReader(os.Stdin)
 
 TURN_ACTIONS:
