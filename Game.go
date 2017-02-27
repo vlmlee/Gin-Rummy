@@ -147,8 +147,14 @@ TURN_ACTIONS:
 			fmt.Println("Something went wrong. Try discarding a different card.")
 			continue
 		}
-		p.Hand.DiscardCard(card, stack)
-		fmt.Printf("\n%s discarded %s\n", p.name, discard)
+
+		discardCard, err := p.Hand.DiscardCard(card, stack)
+		if err != nil {
+			fmt.Println("\nSomething went wrong. Try discarding a different card.")
+			continue
+		}
+
+		fmt.Printf("\n%s discarded %s\n", p.name, discardCard)
 		break
 	}
 	return
