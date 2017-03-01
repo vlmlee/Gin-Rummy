@@ -117,7 +117,6 @@ func GetCardValue(s string) (value int, err error) {
 		value = 10
 	default:
 		value, err = strconv.Atoi(s)
-		return value, err
 	}
 	return
 }
