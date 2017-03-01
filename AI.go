@@ -8,7 +8,7 @@ import "math"
 // The general strategy is to play greedily. The AI will ignore the player's
 // actions and try to as quickly as possible to knock and end the game. This
 // means it will simply look for nearest neighbors of cards in its hand that
-// is currently not in a meld. If the card on the stack is not within 2 range,
+// is currently not in a meld. If the card on the stack is not within 1 range,
 // it will draw a card from the deck. If it has to decide between two cards
 // with one pairing to discard, it will always discard the greater value card.
 
@@ -38,9 +38,9 @@ func (u *Deadwood) CardDistance(c Card) int {
 // ChooseCardToDiscard will decide between cards to discard. The theory is that
 // a good strategy is to get rid of the highest value card first in order to get
 // closer to knocking. Since the game is a race to knock, we should try to
-// the chances to do so. Saving slots for nearest neighbors in hopes of drawing
-// the right card is not good unless we have an idea of what cards are going to
-// appear. We could implement that in the future.
+// improve the chances to do so. Saving slots for nearest neighbors in hopes of
+// drawing the right card is not good unless we have an idea of what cards are
+// going to appear. We could implement that in the future.
 func (u *Deadwood) ChooseCardToDiscard() Card {
 	cardToDiscard := Card{}
 	max := 0
