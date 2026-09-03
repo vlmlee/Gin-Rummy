@@ -168,7 +168,7 @@ func CalculateScore(h1, h2 *Hand, gin bool) (score int) {
 	return h2.CheckTotal() - h1.CheckTotal()
 }
 
-func main() {
+func Play() {
 	pScore := 0
 	AIScore := 0
 
@@ -183,7 +183,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	fmt.Printf("Welcome %s! Lets play a game of Gin Rummy!\n", name)
+	fmt.Printf("Welcome %s! Let's play a game of Gin Rummy!\n", name)
 	fmt.Printf("\n")
 	StartNewGame(&name, &pScore, &AIScore)
 }
