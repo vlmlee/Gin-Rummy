@@ -210,6 +210,17 @@ h1 {
   animation: flicker 6s steps(2, end) infinite;
 }
 
+footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--cream-dark);
+}
+
+footer a {
+  color: var(--gold);
+}
+
 @keyframes pulse {
   50% {
     opacity: 0.35;
