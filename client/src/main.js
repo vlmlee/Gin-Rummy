@@ -46,7 +46,7 @@ window.addEventListener('resize', fitTerm)
 
 term.write('Connecting to Go application backend...\r\n')
 
-const socket = new WebSocket(`wss://ginrummy.live:8080/ws`)
+const socket = new WebSocket(`ws://ginrummy.live:8080/ws`)
 
 socket.onmessage = (event) => {
   term.write(event.data)
